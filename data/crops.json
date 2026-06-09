@@ -2,12 +2,35 @@
   "wheat": {
     "name": "Wheat",
     "hindi_name": "गेहूँ",
-    "season": "Rabi (Oct-Mar)",
-    "soil_type": "Loamy, well-drained",
+    "season": "",
+    "soil_type": "",
     "ph": {
-      "min": 6.0,
-      "max": 7.5,
-      "ideal": 6.5
-    }
+      "min": 0,
+      "max": 0,
+      "ideal": 0
+    },
+    "nitrogen": {
+      "min": 0,
+      "max": 0,
+      "ideal": 0,
+      "unit": "kg/ha"
+    },
+    "phosphorus": {
+      "min": 0,
+      "max": 0,
+      "ideal": 0,
+      "unit": "kg/ha"
+    },
+    "potassium": {
+      "min": 0,
+      "max": 0,
+      "ideal": 0,
+      "unit": "kg/ha"
+    },
+    "fertilizers": {},
+    "soil_correction": {},
+    "improvement_plan": {},
+    "description": "",
+    "suitability_notes": ""
   }
 }
