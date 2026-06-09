@@ -122,13 +122,165 @@
     "Maintain proper drainage"
   ]
 },
-  "rice": {},
-  "maize": {},
-  "soybean": {},
-  "groundnut": {},
-  "cotton": {},
-  "sugarcane": {},
-  "tomato": {},
-  "potato": {},
-  "onion": {}
+  "rice": {
+  "name": "Rice",
+  "hindi_name": "धान",
+  "season": "Kharif (Jun-Nov)",
+  "soil_requirements": {
+    "ph": {"min": 5.5, "max": 7.0, "optimal": 6.5},
+    "nitrogen": {"min": 280, "max": 560, "unit": "kg/ha"},
+    "phosphorus": {"min": 20, "max": 50, "unit": "kg/ha"},
+    "potassium": {"min": 120, "max": 300, "unit": "kg/ha"},
+    "organic_carbon": {"min": 0.5, "optimal": 0.8, "unit": "%"}
+  },
+  "climate": {
+    "temperature": {"min": 20, "max": 35, "unit": "°C"},
+    "rainfall": {"min": 100, "max": 200, "unit": "cm"}
+  },
+  "soil_type": ["Clay", "Clay Loam", "Silty Clay"]
+},
+
+"maize": {
+  "name": "Maize",
+  "hindi_name": "मक्का",
+  "season": "Kharif",
+  "soil_requirements": {
+    "ph": {"min": 5.8, "max": 7.0, "optimal": 6.5},
+    "nitrogen": {"min": 250, "max": 500, "unit": "kg/ha"},
+    "phosphorus": {"min": 20, "max": 60, "unit": "kg/ha"},
+    "potassium": {"min": 150, "max": 350, "unit": "kg/ha"},
+    "organic_carbon": {"min": 0.5, "optimal": 0.75, "unit": "%"}
+  },
+  "climate": {
+    "temperature": {"min": 18, "max": 27, "unit": "°C"},
+    "rainfall": {"min": 50, "max": 100, "unit": "cm"}
+  },
+  "soil_type": ["Loamy", "Sandy Loam", "Silt Loam"]
+},
+
+"soybean": {
+  "name": "Soybean",
+  "hindi_name": "सोयाबीन",
+  "season": "Kharif",
+  "soil_requirements": {
+    "ph": {"min": 6.0, "max": 7.5, "optimal": 6.8},
+    "nitrogen": {"min": 200, "max": 400, "unit": "kg/ha"},
+    "phosphorus": {"min": 20, "max": 50, "unit": "kg/ha"},
+    "potassium": {"min": 120, "max": 300, "unit": "kg/ha"},
+    "organic_carbon": {"min": 0.5, "optimal": 0.8, "unit": "%"}
+  },
+  "climate": {
+    "temperature": {"min": 20, "max": 30, "unit": "°C"},
+    "rainfall": {"min": 60, "max": 120, "unit": "cm"}
+  },
+  "soil_type": ["Loamy", "Clay Loam", "Silt Loam"]
+},
+
+"groundnut": {
+  "name": "Groundnut",
+  "hindi_name": "मूंगफली",
+  "season": "Kharif",
+  "soil_requirements": {
+    "ph": {"min": 6.0, "max": 7.0, "optimal": 6.5},
+    "nitrogen": {"min": 200, "max": 400, "unit": "kg/ha"},
+    "phosphorus": {"min": 20, "max": 50, "unit": "kg/ha"},
+    "potassium": {"min": 120, "max": 280, "unit": "kg/ha"},
+    "organic_carbon": {"min": 0.5, "optimal": 0.8, "unit": "%"}
+  },
+  "climate": {
+    "temperature": {"min": 20, "max": 30, "unit": "°C"},
+    "rainfall": {"min": 50, "max": 100, "unit": "cm"}
+  },
+  "soil_type": ["Sandy Loam", "Loamy", "Well-drained Soil"]
+},
+
+"cotton": {
+  "name": "Cotton",
+  "hindi_name": "कपास",
+  "season": "Kharif",
+  "soil_requirements": {
+    "ph": {"min": 5.8, "max": 8.0, "optimal": 7.0},
+    "nitrogen": {"min": 280, "max": 560, "unit": "kg/ha"},
+    "phosphorus": {"min": 25, "max": 60, "unit": "kg/ha"},
+    "potassium": {"min": 150, "max": 350, "unit": "kg/ha"},
+    "organic_carbon": {"min": 0.5, "optimal": 0.75, "unit": "%"}
+  },
+  "climate": {
+    "temperature": {"min": 21, "max": 30, "unit": "°C"},
+    "rainfall": {"min": 50, "max": 100, "unit": "cm"}
+  },
+  "soil_type": ["Black Soil", "Clay Loam", "Loamy"]
+},
+
+"sugarcane": {
+  "name": "Sugarcane",
+  "hindi_name": "गन्ना",
+  "season": "Annual",
+  "soil_requirements": {
+    "ph": {"min": 6.0, "max": 8.0, "optimal": 7.0},
+    "nitrogen": {"min": 300, "max": 600, "unit": "kg/ha"},
+    "phosphorus": {"min": 25, "max": 60, "unit": "kg/ha"},
+    "potassium": {"min": 180, "max": 400, "unit": "kg/ha"},
+    "organic_carbon": {"min": 0.75, "optimal": 1.0, "unit": "%"}
+  },
+  "climate": {
+    "temperature": {"min": 20, "max": 35, "unit": "°C"},
+    "rainfall": {"min": 75, "max": 150, "unit": "cm"}
+  },
+  "soil_type": ["Loamy", "Clay Loam", "Silt Loam"]
+},
+
+"tomato": {
+  "name": "Tomato",
+  "hindi_name": "टमाटर",
+  "season": "Year Round",
+  "soil_requirements": {
+    "ph": {"min": 6.0, "max": 7.0, "optimal": 6.5},
+    "nitrogen": {"min": 250, "max": 500, "unit": "kg/ha"},
+    "phosphorus": {"min": 25, "max": 60, "unit": "kg/ha"},
+    "potassium": {"min": 150, "max": 350, "unit": "kg/ha"},
+    "organic_carbon": {"min": 0.75, "optimal": 1.0, "unit": "%"}
+  },
+  "climate": {
+    "temperature": {"min": 18, "max": 27, "unit": "°C"},
+    "rainfall": {"min": 50, "max": 100, "unit": "cm"}
+  },
+  "soil_type": ["Sandy Loam", "Loamy", "Clay Loam"]
+},
+
+"potato": {
+  "name": "Potato",
+  "hindi_name": "आलू",
+  "season": "Rabi",
+  "soil_requirements": {
+    "ph": {"min": 5.0, "max": 6.5, "optimal": 5.8},
+    "nitrogen": {"min": 250, "max": 500, "unit": "kg/ha"},
+    "phosphorus": {"min": 25, "max": 60, "unit": "kg/ha"},
+    "potassium": {"min": 180, "max": 400, "unit": "kg/ha"},
+    "organic_carbon": {"min": 0.75, "optimal": 1.0, "unit": "%"}
+  },
+  "climate": {
+    "temperature": {"min": 15, "max": 25, "unit": "°C"},
+    "rainfall": {"min": 50, "max": 125, "unit": "cm"}
+  },
+  "soil_type": ["Sandy Loam", "Loamy", "Well-drained Soil"]
+},
+
+"onion": {
+  "name": "Onion",
+  "hindi_name": "प्याज",
+  "season": "Rabi",
+  "soil_requirements": {
+    "ph": {"min": 6.0, "max": 7.5, "optimal": 6.8},
+    "nitrogen": {"min": 200, "max": 450, "unit": "kg/ha"},
+    "phosphorus": {"min": 20, "max": 50, "unit": "kg/ha"},
+    "potassium": {"min": 150, "max": 350, "unit": "kg/ha"},
+    "organic_carbon": {"min": 0.5, "optimal": 0.8, "unit": "%"}
+  },
+  "climate": {
+    "temperature": {"min": 13, "max": 25, "unit": "°C"},
+    "rainfall": {"min": 50, "max": 75, "unit": "cm"}
+  },
+  "soil_type": ["Loamy", "Sandy Loam", "Silt Loam"]
+}
 }
