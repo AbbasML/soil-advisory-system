@@ -1,5 +1,12 @@
 {
-  "wheat": {},
+  "wheat": {
+    "wheat": {
+  "name": "Wheat",
+  "hindi_name": "गेहूँ",
+  "season": "Rabi (Oct-Mar)",
+  "soil_type": "Loamy, well-drained"
+}
+  },
   "rice": {},
   "maize": {},
   "soybean": {},
