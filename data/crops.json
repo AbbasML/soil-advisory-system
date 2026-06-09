@@ -1,36 +1,12 @@
 {
-  "wheat": {
-    "name": "Wheat",
-    "hindi_name": "गेहूँ",
-    "season": "",
-    "soil_type": "",
-    "ph": {
-      "min": 0,
-      "max": 0,
-      "ideal": 0
-    },
-    "nitrogen": {
-      "min": 0,
-      "max": 0,
-      "ideal": 0,
-      "unit": "kg/ha"
-    },
-    "phosphorus": {
-      "min": 0,
-      "max": 0,
-      "ideal": 0,
-      "unit": "kg/ha"
-    },
-    "potassium": {
-      "min": 0,
-      "max": 0,
-      "ideal": 0,
-      "unit": "kg/ha"
-    },
-    "fertilizers": {},
-    "soil_correction": {},
-    "improvement_plan": {},
-    "description": "",
-    "suitability_notes": ""
-  }
+  "wheat": {},
+  "rice": {},
+  "maize": {},
+  "soybean": {},
+  "groundnut": {},
+  "cotton": {},
+  "sugarcane": {},
+  "tomato": {},
+  "potato": {},
+  "onion": {}
 }
