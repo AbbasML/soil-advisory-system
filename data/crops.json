@@ -1,12 +1,127 @@
 {
-  "wheat": {
-    "wheat": {
+   "wheat": {
   "name": "Wheat",
   "hindi_name": "गेहूँ",
   "season": "Rabi (Oct-Mar)",
-  "soil_type": "Loamy, well-drained"
-}
+
+  "soil_requirements": {
+    "ph": {
+      "min": 6.0,
+      "max": 7.5,
+      "optimal": 6.8
+    },
+
+    "nitrogen": {
+      "min": 280,
+      "max": 560,
+      "unit": "kg/ha"
+    },
+
+    "phosphorus": {
+      "min": 22,
+      "max": 56,
+      "unit": "kg/ha"
+    },
+
+    "potassium": {
+      "min": 140,
+      "max": 336,
+      "unit": "kg/ha"
+    },
+
+    "organic_carbon": {
+      "min": 0.5,
+      "optimal": 0.75,
+      "unit": "%"
+    }
   },
+
+  "climate": {
+    "temperature": {
+      "min": 15,
+      "max": 25,
+      "unit": "°C"
+    },
+
+    "rainfall": {
+      "min": 50,
+      "max": 100,
+      "unit": "cm"
+    }
+  },
+
+  "soil_type": [
+    "Loamy",
+    "Clay Loam",
+    "Silty Loam"
+  ]
+},
+
+"deficiency_rules": {
+  "nitrogen": {
+    "threshold": 280,
+    "status": "deficient",
+    "symptoms": [
+      "Yellowing of older leaves",
+      "Stunted growth"
+    ]
+  },
+
+  "phosphorus": {
+    "threshold": 22,
+    "status": "deficient",
+    "symptoms": [
+      "Poor root development",
+      "Dark green leaves"
+    ]
+  },
+
+  "potassium": {
+    "threshold": 140,
+    "status": "deficient",
+    "symptoms": [
+      "Leaf edge scorching",
+      "Weak stems"
+    ]
+  }
+},
+"fertilizer_recommendations": {
+  "nitrogen": [
+    "Urea",
+    "Ammonium Sulphate"
+  ],
+
+  "phosphorus": [
+    "DAP",
+    "Single Super Phosphate"
+  ],
+
+  "potassium": [
+    "Muriate of Potash"
+  ]
+},
+"soil_correction": {
+  "low_ph": [
+    "Apply agricultural lime",
+    "Add organic compost"
+  ],
+
+  "high_ph": [
+    "Apply gypsum",
+    "Use organic matter"
+  ]
+},
+"improvement_plan": {
+  "organic_matter": [
+    "Apply farmyard manure",
+    "Use green manure crops"
+  ],
+
+  "water_management": [
+    "Avoid waterlogging",
+    "Maintain proper drainage"
+  ]
+},
   "rice": {},
   "maize": {},
   "soybean": {},
