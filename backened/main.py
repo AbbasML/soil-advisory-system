@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import google.generativeai as genai
 from dotenv import load_dotenv
+from google import genai
 import os
 
 from rule_engine import (
@@ -12,14 +12,19 @@ from rule_engine import (
     calculate_suitability_all_crops
 )
 
-# Load environment variables
+# --------------------------------------------------
+# Load Environment Variables
+# --------------------------------------------------
 load_dotenv()
 
-# Configure Gemini
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-model = genai.GenerativeModel("gemini-1.5-flash")
+# Gemini Client
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
 
+# --------------------------------------------------
 # FastAPI App
+# --------------------------------------------------
 app = FastAPI(title="AI Soil Health Advisory API")
 
 # Enable CORS
@@ -30,7 +35,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
 
 # --------------------------------------------------
 # Health Check
@@ -71,12 +75,15 @@ async def analyze_soil(data: dict):
         P = float(data["phosphorus"])
         K = float(data["potassium"])
 
-        farm_acres = float(data.get("farm_acres", 1))
         language = data.get("language", "English")
 
         # Rule Engine
         deficiencies = detect_deficiencies(
-            crop, ph, N, P, K
+            crop,
+            ph,
+            N,
+            P,
+            K
         )
 
         fertilizers = get_fertilizer_recommendations(
@@ -84,8 +91,7 @@ async def analyze_soil(data: dict):
             ph,
             N,
             P,
-            K,
-            farm_acres
+            K
         )
 
         improvement_plan = get_improvement_plan(
@@ -96,7 +102,7 @@ async def analyze_soil(data: dict):
             K
         )
 
-        # Gemini Summary
+        # Gemini Prompt
         prompt = f"""
 You are an agricultural advisor for Indian farmers.
 
@@ -118,6 +124,7 @@ Improvement Plan:
 {improvement_plan}
 
 Write a simple farmer-friendly advisory in {language}.
+
 Maximum 5 short sentences.
 Mention:
 1. Whether soil is suitable.
@@ -126,7 +133,10 @@ Mention:
 4. Positive encouragement.
 """
 
-        ai_summary = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
 
         return {
             "success": True,
@@ -134,11 +144,12 @@ Mention:
             "deficiencies": deficiencies,
             "fertilizer_recommendations": fertilizers,
             "improvement_plan": improvement_plan,
-            "ai_summary": ai_summary.text,
-            "overall_status":
+            "ai_summary": response.text,
+            "overall_status": (
                 "Good"
                 if len(deficiencies) == 0
                 else "Needs Improvement"
+            )
         }
 
     except Exception as e:
@@ -205,7 +216,10 @@ Answer in a simple and practical way.
 Keep response under 150 words.
 """
 
-        response = model.generate_content(prompt)
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
 
         return {
             "reply": response.text,
