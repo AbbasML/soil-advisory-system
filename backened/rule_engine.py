@@ -23,14 +23,52 @@ def get_crop_data(crop):
 # -----------------------------------------
 # Helper: Scoring Function
 # -----------------------------------------
-def score_param(value, req):
-    if req["min"] <= value <= req["max"]:
-        return 25
-    elif value < req["min"]:
-        return 10
-    else:
-        return 15
 
+def score_param(value, req):
+
+    min_val = req["min"]
+    max_val = req["max"]
+
+    # Use optimal if available
+    optimal = req.get(
+        "optimal",
+        (min_val + max_val) / 2
+    )
+
+    # Inside range
+    if min_val <= value <= max_val:
+
+        max_distance = max(
+            abs(optimal - min_val),
+            abs(max_val - optimal)
+        )
+
+        if max_distance == 0:
+            return 100
+
+        distance = abs(value - optimal)
+
+        score = 100 - (
+            distance / max_distance
+        ) * 20
+
+        return round(score)
+
+    # Below range
+    if value < min_val:
+
+        percent_diff = (
+            (min_val - value) / min_val
+        ) * 100
+
+        return max(0, round(100 - percent_diff))
+
+    # Above range
+    percent_diff = (
+        (value - max_val) / max_val
+    ) * 100
+
+    return max(0, round(100 - percent_diff))
 
 # -----------------------------------------
 # Detect Deficiencies
@@ -129,7 +167,7 @@ def calculate_suitability_all_crops(ph, N, P, K):
 
     for crop_key, crop_data in CROPS.items():
 
-        # skip global config sections
+        # Skip config sections
         if crop_key in [
             "deficiency_rules",
             "fertilizer_recommendations",
@@ -143,19 +181,156 @@ def calculate_suitability_all_crops(ph, N, P, K):
 
         req = crop_data["soil_requirements"]
 
-        score = 0
+        ph_score = score_param(
+            ph,
+            req["ph"]
+        )
 
-        # Scoring
-        score += score_param(ph, req["ph"])
-        score += score_param(N, req["nitrogen"])
-        score += score_param(P, req["phosphorus"])
-        score += score_param(K, req["potassium"])
+        n_score = score_param(
+            N,
+            req["nitrogen"]
+        )
+
+        p_score = score_param(
+            P,
+            req["phosphorus"]
+        )
+
+        k_score = score_param(
+            K,
+            req["potassium"]
+        )
+
+        # Weighted score
+        score = (
+            ph_score * 0.20 +
+            n_score * 0.30 +
+            p_score * 0.25 +
+            k_score * 0.25
+        )
 
         rankings.append({
-            "crop": crop_data.get("name", crop_key),
-            "score": score
+            "crop": crop_data.get(
+                "name",
+                crop_key
+            ),
+            "score": round(score, 1),
+            "details": {
+                "ph": ph_score,
+                "nitrogen": n_score,
+                "phosphorus": p_score,
+                "potassium": k_score
+            }
         })
 
-    rankings.sort(key=lambda x: x["score"], reverse=True)
+    rankings.sort(
+        key=lambda x: x["score"],
+        reverse=True
+    )
 
-    return rankings
+    return rankings[:5]
+# -----------------------------------------
+# Soil Health Score
+# -----------------------------------------
+def calculate_soil_health_score(
+    crop,
+    ph,
+    N,
+    P,
+    K
+):
+
+    crop_data = get_crop_data(crop)
+
+    if not crop_data:
+        return {
+            "score": 0,
+            "status": "Unknown"
+        }
+
+    req = crop_data["soil_requirements"]
+
+    ph_score = score_param(
+        ph,
+        req["ph"]
+    )
+
+    n_score = score_param(
+        N,
+        req["nitrogen"]
+    )
+
+    p_score = score_param(
+        P,
+        req["phosphorus"]
+    )
+
+    k_score = score_param(
+        K,
+        req["potassium"]
+    )
+
+    score = round(
+        (
+            ph_score +
+            n_score +
+            p_score +
+            k_score
+        ) / 4
+    )
+
+    if score >= 80:
+        status = "Excellent"
+    elif score >= 60:
+        status = "Good"
+    elif score >= 40:
+        status = "Moderate"
+    else:
+        status = "Poor"
+
+    return {
+        "score": score,
+        "status": status
+    }
+# -----------------------------------------
+# Soil Health Score
+# -----------------------------------------
+def calculate_soil_health_score(crop, ph, N, P, K):
+
+    crop_data = get_crop_data(crop)
+
+    if not crop_data:
+        return {
+            "score": 0,
+            "status": "Unknown"
+        }
+
+    req = crop_data["soil_requirements"]
+
+    ph_score = score_param(ph, req["ph"])
+    n_score = score_param(N, req["nitrogen"])
+    p_score = score_param(P, req["phosphorus"])
+    k_score = score_param(K, req["potassium"])
+
+    score = (
+        ph_score * 0.25 +
+        n_score * 0.25 +
+        p_score * 0.25 +
+        k_score * 0.25
+    )
+
+    score = round(score)
+
+    if score >= 80:
+        status = "Excellent"
+    elif score >= 60:
+        status = "Good"
+    elif score >= 40:
+        status = "Moderate"
+    else:
+        status = "Poor"
+
+    return {
+        "score": score,
+        "status": status
+    }

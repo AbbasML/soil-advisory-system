@@ -1,145 +1,64 @@
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
+import SoilHealthCard from "./SoilHealthCard";
+import BestCropCard from "./BestCropCard";
+import DeficiencyCard from "./DeficiencyCard";
+import SoilManagementCard from "./SoilManagementCard";
+import AISummaryCard from "./AISummaryCard";
+import NutrientChart from "./NutrientChart";
+import CropRankingTable from "./CropRankingTable";
 
 function Dashboard({ analysis, rankings, setView }) {
-  const chartData = [
-    {
-      name: "Deficiencies",
-      value: analysis.deficiencies.length,
-    },
-    {
-      name: "Fertilizers",
-      value: analysis.fertilizer_recommendations.length,
-    },
-    {
-      name: "Improvements",
-      value: analysis.improvement_plan.length,
-    },
-  ];
+  if (!analysis) {
+    return <h2>No analysis data available.</h2>;
+  }
 
   return (
-    <div
-      style={{
-        padding: "30px",
-        maxWidth: "1000px",
-        margin: "auto",
-      }}
-    >
+    <div className="dashboard-container">
       <h1>🌱 Soil Health Dashboard</h1>
 
-      <h2>
-        Status:
-        <span
-          style={{
-            marginLeft: "10px",
-            color:
-              analysis.overall_status === "Good"
-                ? "green"
-                : "red",
-          }}
-        >
-          {analysis.overall_status}
-        </span>
-      </h2>
+      <div className="dashboard-grid">
+        <SoilHealthCard
+          score={analysis.soil_health_score}
+          status={analysis.soil_health_status}
+        />
 
-      <hr />
+        <BestCropCard
+          crop={analysis.crop}
+          score={rankings?.[0]?.score || 0}
+        />
 
-      <h2>Detected Deficiencies</h2>
+        <DeficiencyCard
+          deficiencies={analysis.deficiencies || []}
+        />
 
-      {analysis.deficiencies.length === 0 ? (
-        <p>No deficiencies found.</p>
-      ) : (
-        <ul>
-          {analysis.deficiencies.map((item, index) => (
-            <li key={index}>{item}</li>
-          ))}
-        </ul>
-      )}
-
-      <hr />
-
-      <h2>Recommended Fertilizers</h2>
-
-      <ul>
-        {analysis.fertilizer_recommendations.map(
-          (fertilizer, index) => (
-            <li key={index}>{fertilizer}</li>
-          )
-        )}
-      </ul>
-
-      <hr />
-
-      <h2>Improvement Plan</h2>
-
-      <ul>
-        {analysis.improvement_plan.map((step, index) => (
-          <li key={index}>✓ {step}</li>
-        ))}
-      </ul>
-
-      <hr />
-
-      <h2>AI Advisory</h2>
-
-      <div
-        style={{
-          background: "#f5f5f5",
-          padding: "15px",
-          borderRadius: "10px",
-        }}
-      >
-        {analysis.ai_summary}
+        <SoilManagementCard
+          recommendations={analysis.improvement_plan || []}
+        />
       </div>
 
-      <hr />
+      <AISummaryCard
+        summary={analysis.ai_summary}
+      />
 
-      <h2>Soil Analysis Overview</h2>
+      <div style={{ marginTop: "20px" }}>
+        <NutrientChart
+          N={analysis.N || 0}
+          P={analysis.P || 0}
+          K={analysis.K || 0}
+          ph={analysis.ph || 0}
+        />
+      </div>
 
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart data={chartData}>
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Bar dataKey="value" />
-        </BarChart>
-      </ResponsiveContainer>
-
-      <hr />
-
-      <h2>Crop Suitability Rankings</h2>
-
-      <ResponsiveContainer width="100%" height={450}>
-        <BarChart
-          data={rankings}
-          layout="vertical"
-        >
-          <XAxis type="number" />
-          <YAxis
-            dataKey="crop"
-            type="category"
-          />
-          <Tooltip />
-          <Bar dataKey="score" />
-        </BarChart>
-      </ResponsiveContainer>
-
-      <br />
+      <div style={{ marginTop: "20px" }}>
+        <CropRankingTable
+          crops={rankings || []}
+        />
+      </div>
 
       <button
         onClick={() => setView("chat")}
-        style={{
-          padding: "10px 20px",
-          cursor: "pointer",
-        }}
+        className="chat-btn"
       >
-        Ask KisanBot
+        🤖 Ask KisanBot
       </button>
     </div>
   );

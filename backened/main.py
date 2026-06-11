@@ -9,7 +9,8 @@ from rule_engine import (
     detect_deficiencies,
     get_fertilizer_recommendations,
     get_improvement_plan,
-    calculate_suitability_all_crops
+    calculate_suitability_all_crops,
+    calculate_soil_health_score
 )
 
 # --------------------------------------------------
@@ -55,9 +56,6 @@ def test():
     }
 
 
-# --------------------------------------------------
-# Soil Analysis Endpoint
-# --------------------------------------------------
 @app.post("/analyze")
 async def analyze_soil(data: dict):
 
@@ -102,7 +100,14 @@ async def analyze_soil(data: dict):
             K
         )
 
-        # Gemini Prompt
+        soil_health = calculate_soil_health_score(
+            crop,
+            ph,
+            N,
+            P,
+            K
+        )
+
         prompt = f"""
 You are an agricultural advisor for Indian farmers.
 
@@ -138,17 +143,31 @@ Mention:
             contents=prompt
         )
 
+        ai_summary = response.text
+
         return {
             "success": True,
+
+            "soil_health_score": soil_health["score"],
+            "soil_health_status": soil_health["status"],
+
             "crop": CROPS[crop]["name"],
+
+            "ph": ph,
+            "N": N,
+            "P": P,
+            "K": K,
+
             "deficiencies": deficiencies,
             "fertilizer_recommendations": fertilizers,
             "improvement_plan": improvement_plan,
-            "ai_summary": response.text,
+
+            "ai_summary": ai_summary,
+
             "overall_status": (
                 "Good"
                 if len(deficiencies) == 0
-                else "Needs Improvement"
+                else "Needs Attention"
             )
         }
 
