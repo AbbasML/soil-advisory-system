@@ -109,11 +109,17 @@ async def analyze_soil(data: dict):
         )
 
         prompt = f"""
-You are an agricultural advisor for Indian farmers.
+You are an expert agricultural advisor for Indian farmers.
+
+IMPORTANT:
+- Respond ONLY in {language}.
+- Do not mix languages.
+- Use simple farmer-friendly words.
+- Keep the response short and practical.
 
 Crop: {CROPS[crop]['name']}
 
-Soil Test:
+Soil Test Results:
 - pH: {ph}
 - Nitrogen: {N}
 - Phosphorus: {P}
@@ -128,14 +134,15 @@ Fertilizer Recommendations:
 Improvement Plan:
 {improvement_plan}
 
-Write a simple farmer-friendly advisory in {language}.
+Write a farmer advisory.
+
+Include:
+1. Soil condition.
+2. Main nutrient deficiencies.
+3. Recommended fertilizers/actions.
+4. Positive encouragement.
 
 Maximum 5 short sentences.
-Mention:
-1. Whether soil is suitable.
-2. Main issues.
-3. Recommended action.
-4. Positive encouragement.
 """
 
         response = client.models.generate_content(
@@ -221,18 +228,29 @@ async def chat(data: dict):
         soil_context = data.get("soil_context", "")
 
         prompt = f"""
-You are KisanBot, an agricultural assistant.
+You are KisanBot, an expert agricultural advisor for farmers.
+
+Always use the provided soil report while answering.
+
+Current Soil Report:
+{soil_context}
 
 Language: {language}
-
-Soil Context:
-{soil_context}
 
 Farmer Question:
 {user_message}
 
-Answer in a simple and practical way.
-Keep response under 150 words.
+Instructions:
+1. Analyze the soil report before answering.
+2. Mention soil deficiencies if relevant.
+3. Recommend suitable crops when asked.
+4. Recommend fertilizers when asked.
+5. Explain in simple farmer-friendly language.
+6. If the question is unrelated to farming, politely redirect to agriculture topics.
+7. Keep answers practical and under 150 words.
+8. Address the farmer respectfully.
+
+Provide a clear and actionable answer.
 """
 
         response = client.models.generate_content(
