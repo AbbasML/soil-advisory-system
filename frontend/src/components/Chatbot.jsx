@@ -4,9 +4,9 @@ import { chatWithBot } from "../services/api";
 function Chatbot({ analysis, language, setView }) {
   const [messages, setMessages] = useState([
     {
-      role: "bot",
-      text: "Namaste! I am KisanBot. Ask me anything about your soil and crops.",
-    },
+  role: "bot",
+  text: `Namaste! I am KisanBot 🌾. Your current soil health score is ${analysis?.soil_health_score || "N/A"} and the recommended crop is ${analysis?.crop || "N/A"}. Ask me anything about your soil and crops.`,
+},
   ]);
 
   const [input, setInput] = useState("");
