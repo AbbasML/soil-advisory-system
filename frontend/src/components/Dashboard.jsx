@@ -1,3 +1,5 @@
+console.log("Dashboard Analysis:", analysis);
+console.log("Dashboard Rankings:", rankings);
 import SoilHealthCard from "./SoilHealthCard";
 import BestCropCard from "./BestCropCard";
 import DeficiencyCard from "./DeficiencyCard";
@@ -118,14 +120,33 @@ const cropData =
 };
   return (
     <div className="dashboard-container">
-      <h1>🌱 Soil Health Dashboard</h1>
+      <div className="dashboard-header">
+  <h1>🌱 AI Soil Health Dashboard</h1>
+  <p>
+    Smart Soil Analysis • Crop Recommendation • AI Advisory
+  </p>
+</div>
+      <div className="stats-row">
+
+  <div className="stat-card">
+    <h3>🌱 Soil Health</h3>
+    <h2>{analysis.soil_health_score}/100</h2>
+  </div>
+
+  <div className="stat-card">
+    <h3>🏆 Best Crop</h3>
+    <h2>{analysis.crop}</h2>
+  </div>
+
+  <div className="stat-card">
+    <h3>⚠ Deficiencies</h3>
+    <h2>{analysis.deficiencies?.length || 0}</h2>
+  </div>
+
+</div>
        <button
   onClick={downloadReport}
-  style={{
-    padding: "10px 20px",
-    marginBottom: "20px",
-    cursor: "pointer"
-  }}
+  className="download-btn"
 >
   📄 Download Soil Report
 </button>
@@ -142,7 +163,10 @@ const cropData =
       <XAxis dataKey="crop" />
       <YAxis />
       <Tooltip />
-      <Bar dataKey="score" />
+      <Bar
+  dataKey="score"
+  fill="#2d6a4f"
+/>
     </BarChart>
   </ResponsiveContainer>
 </div>
@@ -154,7 +178,10 @@ const cropData =
       <XAxis dataKey="name" />
       <YAxis />
       <Tooltip />
-      <Bar dataKey="value" />
+      <Bar
+  dataKey="value"
+  fill="#e9c46a"
+/>
     </BarChart>
   </ResponsiveContainer>
 </div>
