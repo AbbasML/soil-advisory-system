@@ -761,3 +761,25 @@ body {
 .app-footer strong {
   color: var(--green-main);
 }
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+.dashboard-container {
+  max-width: 1400px;
+  margin: auto;
+  padding: 20px;
+}
+.dashboard-container h1 {
+  text-align: center;
+  margin-bottom: 20px;
+}
