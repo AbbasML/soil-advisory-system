@@ -22,28 +22,34 @@ function SoilForm({ onResult }) {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    try {
-      setLoading(true);
+  // Validate pH
+  if (formData.ph < 0 || formData.ph > 14) {
+    alert("pH must be between 0 and 14");
+    return;
+  }
 
-      const analysisResponse = await analyzeSoil(formData);
-      const rankingResponse = await compareCrops(formData);
+  try {
+    setLoading(true);
 
-      if (onResult) {
-        onResult(
-          analysisResponse.data,
-          rankingResponse.data.rankings || []
-        );
-      }
-    } catch (error) {
-      console.error(error);
-      alert("Failed to analyze soil. Check backend.");
-    } finally {
-      setLoading(false);
+    const analysisResponse = await analyzeSoil(formData);
+    const rankingResponse = await compareCrops(formData);
+
+    if (onResult) {
+      onResult(
+        analysisResponse.data,
+        rankingResponse.data.rankings || []
+      );
     }
-  };
+  } catch (error) {
+    console.error(error);
+    alert("Failed to analyze soil. Check backend.");
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <div className="soil-form-container">
@@ -94,13 +100,15 @@ function SoilForm({ onResult }) {
 
           <label>pH</label>
           <input
-            type="number"
-            step="0.1"
-            name="ph"
-            value={formData.ph}
-            onChange={handleChange}
-            required
-          />
+  type="number"
+  step="0.1"
+  min="0"
+  max="14"
+  name="ph"
+  value={formData.ph}
+  onChange={handleChange}
+  required
+/>
 
           <label>Rainfall (mm)</label>
           <input

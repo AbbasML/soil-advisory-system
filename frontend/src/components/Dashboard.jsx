@@ -100,9 +100,9 @@ function Dashboard({ analysis, rankings, setView }) {
         </div>
 
         <div className="stat-card">
-          <h3>⚠ Deficiencies</h3>
-          <h2>{analysis.deficiencies?.length || 0}</h2>
-        </div>
+  <h3>🏆 Best Crop</h3>
+  <h2>{rankings?.[0]?.crop || analysis.crop}</h2>
+</div>
       </div>
       <button onClick={downloadReport} className="download-btn">
         📄 Download Soil Report
@@ -158,7 +158,10 @@ function Dashboard({ analysis, rankings, setView }) {
           <p>Current Score: {analysis.soil_health_score}/100</p>
         </div>
 
-        <BestCropCard crop={analysis.crop} score={rankings?.[0]?.score || 0} />
+        <BestCropCard
+  crop={rankings?.[0]?.crop || analysis.crop}
+  score={rankings?.[0]?.score || 0}
+/>
 
         <DeficiencyCard deficiencies={analysis.deficiencies || []} />
 
@@ -179,7 +182,12 @@ function Dashboard({ analysis, rankings, setView }) {
       <div style={{ marginTop: "20px" }}>
         <CropRankingTable crops={rankings || []} />
       </div>
-
+<button
+  onClick={() => setView("form")}
+  className="download-btn"
+>
+  🔄 Analyze Another Soil Sample
+</button>
       <button onClick={() => setView("chat")} className="chat-btn">
         🤖 Ask KisanBot
       </button>
