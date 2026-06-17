@@ -64,11 +64,14 @@ function Chatbot({ analysis, language, setView }) {
         padding: "20px",
       }}
     >
-      <h1>🌾 KisanBot</h1>
+      <div className="dashboard-header">
+  <h1>🤖 KisanBot Assistant</h1>
+  <p>AI-powered farming guidance based on your soil report</p>
+</div>
 
-      <button onClick={() => setView("results")}>
-        ← Back to Dashboard
-      </button>
+      <button onClick={() => setView("dashboard")}>
+  ← Back to Dashboard
+</button>
 
       <br />
       <br />
@@ -130,17 +133,22 @@ function Chatbot({ analysis, language, setView }) {
       <br />
 
       <input
-        type="text"
-        placeholder="Ask KisanBot..."
-        value={input}
-        onChange={(e) =>
-          setInput(e.target.value)
-        }
-        style={{
-          width: "75%",
-          padding: "10px",
-        }}
-      />
+  type="text"
+  placeholder="Ask KisanBot..."
+  value={input}
+  onChange={(e) => setInput(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      sendMessage();
+    }
+  }}
+  style={{
+    width: "75%",
+    padding: "12px",
+    borderRadius: "10px",
+    border: "1px solid #ddd",
+  }}
+/>
 
       <button
         onClick={() => sendMessage()}

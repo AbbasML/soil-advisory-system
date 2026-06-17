@@ -48,9 +48,9 @@ body {
 }
 
 .app-container {
-  max-width: 900px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 0 16px 60px;
+  padding: 0 20px 60px;
 }
 
 /* ══════════════════════════════════
@@ -201,21 +201,31 @@ body {
    DASHBOARD
 ══════════════════════════════════ */
 .dashboard-container {
-  max-width: 900px;
+  max-width: 1400px;
   margin: 0 auto;
   padding: 20px 0;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
 }
 
 .dashboard-header {
   text-align: center;
-  background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
-  color: #fff;
+
+  background:
+    linear-gradient(
+      rgba(20, 83, 45, 0.88),
+      rgba(21, 128, 61, 0.88)
+    ),
+    url("https://images.unsplash.com/photo-1500937386664-56d1dfef3854");
+
+  background-size: cover;
+  background-position: center;
+
+  color: white;
   border-radius: var(--radius-lg);
-  padding: 32px 24px;
-  box-shadow: var(--shadow-md);
+  padding: 50px 24px;
+  box-shadow: var(--shadow-lg);
 }
 
 .dashboard-header h1 {
@@ -233,17 +243,32 @@ body {
 .stats-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  gap: 20px;
 }
 
 .stat-card {
-  background: linear-gradient(135deg, var(--green-main), var(--green-mid));
+  background: linear-gradient(
+    135deg,
+    #166534,
+    #22c55e
+  );
+
   color: white;
-  border-radius: var(--radius-md);
-  padding: 24px 16px;
+  border-radius: 18px;
+  padding: 28px 20px;
   text-align: center;
-  box-shadow: var(--shadow-sm);
-  transition: transform 0.2s;
+
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-6px);
+
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.18);
 }
 
 .stat-card:hover {
@@ -265,18 +290,27 @@ body {
 }
 
 .download-btn {
-  background: var(--white);
-  border: 1.5px solid var(--green-mid);
+  background: white;
+  border: 2px solid var(--green-mid);
+
   color: var(--green-main);
-  border-radius: var(--radius-md);
-  padding: 13px 24px;
-  font-size: 14px;
-  font-weight: 600;
-  font-family: inherit;
+
+  border-radius: 14px;
+
+  padding: 14px 24px;
+
+  font-size: 15px;
+  font-weight: 700;
+
   cursor: pointer;
-  transition:
-    background 0.15s,
-    transform 0.15s;
+
+  transition: all 0.25s ease;
+}
+
+.download-btn:hover {
+  background: var(--green-pale);
+
+  transform: translateY(-2px);
 }
 
 .download-btn:hover {
@@ -286,19 +320,36 @@ body {
 
 .dashboard-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(420px, 1fr)
+  );
+  gap: 20px;
 }
 
 .card {
-  background: var(--white);
-  border-radius: var(--radius-md);
-  padding: 22px;
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--gray-100);
-  transition: transform 0.2s;
+  background: white;
+
+  border-radius: 18px;
+
+  padding: 24px;
+
+  box-shadow:
+    0 10px 25px rgba(0, 0, 0, 0.08);
+
+  border: 1px solid #eef2f7;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
+.card:hover {
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 15px 30px rgba(0, 0, 0, 0.12);
+}
 .card:hover {
   transform: translateY(-3px);
 }
@@ -319,18 +370,34 @@ body {
 
 .chat-btn {
   width: 100%;
-  padding: 16px;
-  background: linear-gradient(135deg, var(--golden), #eab308);
-  color: var(--green-dark);
+
+  padding: 18px;
+
+  background: linear-gradient(
+    135deg,
+    #f59e0b,
+    #facc15
+  );
+
+  color: #14532d;
+
   border: none;
-  border-radius: var(--radius-md);
-  font-size: 16px;
+
+  border-radius: 16px;
+
+  font-size: 17px;
   font-weight: 700;
-  font-family: inherit;
+
   cursor: pointer;
-  margin-top: 8px;
-  box-shadow: 0 6px 18px rgba(202, 138, 4, 0.3);
-  transition: transform 0.15s;
+
+  box-shadow:
+    0 10px 20px rgba(245, 158, 11, 0.3);
+
+  transition: all 0.25s ease;
+}
+
+.chat-btn:hover {
+  transform: translateY(-3px);
 }
 
 .chat-btn:hover {
@@ -379,4 +446,12 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #bbf7d0;
   border-radius: 3px;
+}
+.recharts-wrapper {
+  font-size: 13px;
+}
+
+.card canvas,
+.card svg {
+  border-radius: 10px;
 }

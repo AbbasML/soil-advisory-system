@@ -16,9 +16,16 @@ function LandingPage({ onStart }) {
             Analyze soil health, get crop recommendations, fertilizer
             suggestions and AI-powered farming guidance.
           </p>
-          <button className="hero-btn" onClick={onStart}>
-            Start Soil Analysis →
-          </button>
+          <button
+  className="hero-btn"
+  onClick={() => {
+    console.log("Button Clicked");
+    console.log("Calling onStart");
+    onStart();
+  }}
+>
+  Start Soil Analysis →
+</button>
           <div className="hero-badge">
             🏆 Team CodeHarvest · TechForGood 2026
           </div>

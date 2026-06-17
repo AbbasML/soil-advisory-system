@@ -1,69 +1,132 @@
-import "./LandingPage.css";
+import { useState } from "react";
+import { analyzeSoil, compareCrops } from "../services/api";
+import "./SoilForm.css";
 
-function LandingPage({ onStart }) {
+function SoilForm({ onResult }) {
+  const [formData, setFormData] = useState({
+    crop: "Rice",
+    nitrogen: "",
+    phosphorus: "",
+    potassium: "",
+    ph: "",
+    rainfall: "",
+    temperature: "",
+  });
+
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      const analysisResponse = await analyzeSoil(formData);
+      const rankingResponse = await compareCrops(formData);
+
+      if (onResult) {
+        onResult(
+          analysisResponse.data,
+          rankingResponse.data.rankings || []
+        );
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Failed to analyze soil. Check backend.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="landing">
-      <div className="hero">
-        <div className="hero-overlay"></div>
-        <div className="hero-content">
-          <div className="hero-icon">🌱</div>
-          <h1 className="hero-title">
-            AI Soil Health
-            <br />
-            Advisory System
-          </h1>
-          <p className="hero-subtitle">
-            Analyze soil health, get crop recommendations, fertilizer
-            suggestions and AI-powered farming guidance.
-          </p>
-          <button className="hero-btn" onClick={onStart}>
-            Start Soil Analysis →
+    <div className="soil-form-container">
+      <div className="soil-card">
+        <h1>🌱 Soil Analysis Form</h1>
+        <p>Enter your soil details below</p>
+
+        <form onSubmit={handleSubmit}>
+          <label>Crop</label>
+          <select
+            name="crop"
+            value={formData.crop}
+            onChange={handleChange}
+          >
+            <option>Rice</option>
+            <option>Wheat</option>
+            <option>Maize</option>
+            <option>Soybean</option>
+            <option>Cotton</option>
+          </select>
+
+          <label>Nitrogen (N)</label>
+          <input
+            type="number"
+            name="nitrogen"
+            value={formData.nitrogen}
+            onChange={handleChange}
+            required
+          />
+
+          <label>Phosphorus (P)</label>
+          <input
+            type="number"
+            name="phosphorus"
+            value={formData.phosphorus}
+            onChange={handleChange}
+            required
+          />
+
+          <label>Potassium (K)</label>
+          <input
+            type="number"
+            name="potassium"
+            value={formData.potassium}
+            onChange={handleChange}
+            required
+          />
+
+          <label>pH</label>
+          <input
+            type="number"
+            step="0.1"
+            name="ph"
+            value={formData.ph}
+            onChange={handleChange}
+            required
+          />
+
+          <label>Rainfall (mm)</label>
+          <input
+            type="number"
+            name="rainfall"
+            value={formData.rainfall}
+            onChange={handleChange}
+            required
+          />
+
+          <label>Temperature (°C)</label>
+          <input
+            type="number"
+            name="temperature"
+            value={formData.temperature}
+            onChange={handleChange}
+            required
+          />
+
+          <button type="submit" disabled={loading}>
+            {loading ? "Analyzing..." : "Start Soil Analysis"}
           </button>
-          <div className="hero-badge">
-            🏆 Team CodeHarvest · TechForGood 2026
-          </div>
-        </div>
+        </form>
       </div>
-
-      <section className="features">
-        <h2 className="features-title">Why Use Our System?</h2>
-        <p className="features-subtitle">
-          Everything a farmer needs to make smarter soil decisions
-        </p>
-
-        <div className="feature-grid">
-          <div className="feature-card">
-            <div className="feature-icon">🌾</div>
-            <h3>Crop Recommendation</h3>
-            <p>Find the most suitable crop for your soil.</p>
-          </div>
-
-          <div className="feature-card">
-            <div className="feature-icon">📊</div>
-            <h3>Soil Analysis</h3>
-            <p>Get instant soil health insights.</p>
-          </div>
-
-          <div className="feature-card">
-            <div className="feature-icon">🤖</div>
-            <h3>AI Assistant</h3>
-            <p>Ask farming questions anytime.</p>
-          </div>
-
-          <div className="feature-card">
-            <div className="feature-icon">📈</div>
-            <h3>Improvement Plan</h3>
-            <p>Improve soil quality with smart suggestions.</p>
-          </div>
-        </div>
-      </section>
-
-      <footer className="landing-footer">
-        <strong>KisanSaathi</strong> · Powered by Google Gemini AI · Team
-        CodeHarvest · IEEE MIT-ADT University
-      </footer>
     </div>
   );
 }
 
-export default LandingPage;
+export default SoilForm;

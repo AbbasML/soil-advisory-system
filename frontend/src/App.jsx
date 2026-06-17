@@ -8,7 +8,6 @@ import Chatbot from "./components/Chatbot";
 
 function App() {
   const [view, setView] = useState("landing");
-
   const [analysis, setAnalysis] = useState(null);
   const [rankings, setRankings] = useState([]);
 
@@ -20,26 +19,34 @@ function App() {
 
   return (
     <div className="app-container">
-      {/* Landing Page */}
-      {view === "landing" && <LandingPage onStart={() => setView("form")} />}
+      {view === "landing" && (
+        <LandingPage onStart={() => setView("form")} />
+      )}
 
-      {/* Soil Form */}
       {view === "form" && (
-        <SoilForm
+  <SoilForm
+    setView={setView}
+    setAnalysis={setAnalysis}
+    setRankings={setRankings}
+    onResult={handleAnalysisComplete}
+  />
+)}
+
+      {view === "dashboard" && analysis && (
+        <Dashboard
+          analysis={analysis}
+          rankings={rankings}
           setView={setView}
-          setAnalysis={setAnalysis}
-          setRankings={setRankings}
-          onResult={handleAnalysisComplete}
         />
       )}
 
-      {/* Dashboard */}
-      {view === "dashboard" && analysis && (
-        <Dashboard analysis={analysis} rankings={rankings} setView={setView} />
-      )}
-
-      {/* Chatbot — separate page */}
-      {view === "chat" && <Chatbot setView={setView} />}
+      {view === "chat" && (
+  <Chatbot
+    analysis={analysis}
+    language="English"
+    setView={setView}
+  />
+)}
     </div>
   );
 }
