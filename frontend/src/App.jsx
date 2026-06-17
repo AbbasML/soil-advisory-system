@@ -20,11 +20,8 @@ function App() {
 
   return (
     <div className="app-container">
-
       {/* Landing Page */}
-      {view === "landing" && (
-        <LandingPage onStart={() => setView("form")} />
-      )}
+      {view === "landing" && <LandingPage onStart={() => setView("form")} />}
 
       {/* Soil Form */}
       {view === "form" && (
@@ -38,15 +35,11 @@ function App() {
 
       {/* Dashboard */}
       {view === "dashboard" && analysis && (
-        <>
-          <Dashboard
-            analysis={analysis}
-            rankings={rankings}
-          />
-
-          <Chatbot />
-        </>
+        <Dashboard analysis={analysis} rankings={rankings} setView={setView} />
       )}
+
+      {/* Chatbot — separate page */}
+      {view === "chat" && <Chatbot setView={setView} />}
     </div>
   );
 }

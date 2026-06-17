@@ -1,188 +1,69 @@
-import { useState } from "react";
-import { analyzeSoil, compareCrops } from "../services/api";
+import "./LandingPage.css";
 
-function SoilForm({
-  setView,
-  setAnalysis,
-  setRankings,
-  language,
-  setLanguage,
-}) {
-  const [formData, setFormData] = useState({
-    crop: "Rice",
-    ph: "",
-    nitrogen: "",
-    phosphorus: "",
-    potassium: "",
-    acres: "",
-    language: "English",
-  });
-
-  const crops = [
-    "Rice",
-    "Maize",
-    "Soybean",
-    "Groundnut",
-    "Cotton",
-    "Sugarcane",
-    "Tomato",
-    "Potato",
-    "Onion",
-    "Wheat",
-  ];
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      // Analyze soil
-      const analysisRes = await analyzeSoil(formData);
-
-      setAnalysis(analysisRes.data);
-
-      // Compare crops
-      const rankingRes = await compareCrops({
-        ph: Number(formData.ph),
-        nitrogen: Number(formData.nitrogen),
-        phosphorus: Number(formData.phosphorus),
-        potassium: Number(formData.potassium),
-      });
-
-      setRankings(rankingRes.data.rankings);
-
-      // Move to dashboard
-      setView("results");
-    } catch (error) {
-      console.error("API Error:", error);
-      alert("Backend connection failed.");
-    }
-  };
-
+function LandingPage({ onStart }) {
   return (
-    <div style={{ padding: "30px", maxWidth: "600px", margin: "auto" }}>
-      <h1>🌱 AI Soil Health Advisory System</h1>
-
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Crop</label>
-          <br />
-          <select
-            name="crop"
-            value={formData.crop}
-            onChange={handleChange}
-          >
-            {crops.map((crop) => (
-              <option key={crop} value={crop}>
-                {crop}
-              </option>
-            ))}
-          </select>
+    <div className="landing">
+      <div className="hero">
+        <div className="hero-overlay"></div>
+        <div className="hero-content">
+          <div className="hero-icon">🌱</div>
+          <h1 className="hero-title">
+            AI Soil Health
+            <br />
+            Advisory System
+          </h1>
+          <p className="hero-subtitle">
+            Analyze soil health, get crop recommendations, fertilizer
+            suggestions and AI-powered farming guidance.
+          </p>
+          <button className="hero-btn" onClick={onStart}>
+            Start Soil Analysis →
+          </button>
+          <div className="hero-badge">
+            🏆 Team CodeHarvest · TechForGood 2026
+          </div>
         </div>
+      </div>
 
-        <br />
+      <section className="features">
+        <h2 className="features-title">Why Use Our System?</h2>
+        <p className="features-subtitle">
+          Everything a farmer needs to make smarter soil decisions
+        </p>
 
-        <div>
-          <label>pH</label>
-          <br />
-          <input
-            type="number"
-            step="0.1"
-            name="ph"
-            value={formData.ph}
-            onChange={handleChange}
-            required
-          />
+        <div className="feature-grid">
+          <div className="feature-card">
+            <div className="feature-icon">🌾</div>
+            <h3>Crop Recommendation</h3>
+            <p>Find the most suitable crop for your soil.</p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon">📊</div>
+            <h3>Soil Analysis</h3>
+            <p>Get instant soil health insights.</p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon">🤖</div>
+            <h3>AI Assistant</h3>
+            <p>Ask farming questions anytime.</p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon">📈</div>
+            <h3>Improvement Plan</h3>
+            <p>Improve soil quality with smart suggestions.</p>
+          </div>
         </div>
+      </section>
 
-        <br />
-
-        <div>
-          <label>Nitrogen (N)</label>
-          <br />
-          <input
-            type="number"
-            name="nitrogen"
-            value={formData.nitrogen}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <br />
-
-        <div>
-          <label>Phosphorus (P)</label>
-          <br />
-          <input
-            type="number"
-            name="phosphorus"
-            value={formData.phosphorus}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <br />
-
-        <div>
-          <label>Potassium (K)</label>
-          <br />
-          <input
-            type="number"
-            name="potassium"
-            value={formData.potassium}
-            onChange={handleChange}
-            required
-          />
-        </div>
-
-        <br />
-
-        <div>
-          <label>Farm Acres</label>
-          <br />
-          <input
-            type="number"
-            name="acres"
-            value={formData.acres}
-            onChange={handleChange}
-          />
-        </div>
-
-        <br />
-
-        <div>
-          <label>Language</label>
-          <br />
-          <select
-            name="language"
-            value={formData.language}
-            onChange={(e) => {
-              handleChange(e);
-              setLanguage(e.target.value);
-            }}
-          >
-            <option value="English">English</option>
-            <option value="Hindi">Hindi</option>
-            <option value="Marathi">Marathi</option>
-          </select>
-        </div>
-
-        <br />
-
-        <button type="submit">
-          Analyze Soil
-        </button>
-      </form>
+      <footer className="landing-footer">
+        <strong>KisanSaathi</strong> · Powered by Google Gemini AI · Team
+        CodeHarvest · IEEE MIT-ADT University
+      </footer>
     </div>
   );
 }
 
-export default SoilForm;
+export default LandingPage;
