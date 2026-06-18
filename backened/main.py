@@ -1,9 +1,19 @@
+import joblib
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from google import genai
 import os
 
+# --------------------------------------------------
+# Load ML Models
+# --------------------------------------------------
+crop_model = joblib.load("crop_model.pkl")
+label_encoder = joblib.load("label_encoder.pkl")
+
+# --------------------------------------------------
+# Rule Engine Imports
+# --------------------------------------------------
 from rule_engine import (
     CROPS,
     detect_deficiencies,
@@ -14,11 +24,10 @@ from rule_engine import (
 )
 
 # --------------------------------------------------
-# Load Environment Variables
+# Environment Setup
 # --------------------------------------------------
 load_dotenv()
 
-# Gemini Client
 client = genai.Client(
     api_key=os.getenv("GEMINI_API_KEY")
 )
@@ -28,7 +37,6 @@ client = genai.Client(
 # --------------------------------------------------
 app = FastAPI(title="AI Soil Health Advisory API")
 
-# Enable CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -38,8 +46,32 @@ app.add_middleware(
 )
 
 # --------------------------------------------------
-# Health Check
+# ML Prediction Function
 # --------------------------------------------------
+def predict_crop_ml(N, P, K, temperature, humidity, ph, rainfall):
+    features = [[N, P, K, temperature, humidity, ph, rainfall]]
+    prediction = crop_model.predict(features)
+    return label_encoder.inverse_transform(prediction)[0]
+
+# --------------------------------------------------
+# Safe Gemini Function (IMPORTANT FIX)
+# --------------------------------------------------
+def get_ai_summary(prompt):
+    try:
+        response = client.models.generate_content(
+            model="gemini-1.5-flash-latest",
+            contents=prompt
+        )
+        return response.text
+
+    except Exception as e:
+        print("Gemini Error:", e)
+        return "AI service is temporarily unavailable. Showing rule-based analysis only."
+
+# --------------------------------------------------
+# Routes
+# --------------------------------------------------
+
 @app.get("/")
 def home():
     return {
@@ -56,6 +88,9 @@ def test():
     }
 
 
+# --------------------------------------------------
+# MAIN ANALYSIS ENDPOINT
+# --------------------------------------------------
 @app.post("/analyze")
 async def analyze_soil(data: dict):
 
@@ -68,90 +103,71 @@ async def analyze_soil(data: dict):
                 "message": f"Crop '{crop}' not found"
             }
 
+        # Safe conversions
         ph = float(data["ph"])
         N = float(data["nitrogen"])
         P = float(data["phosphorus"])
         K = float(data["potassium"])
+        temperature = float(data["temperature"])
+        humidity = float(data["humidity"])
+        rainfall = float(data["rainfall"])
 
         language = data.get("language", "English")
 
+        # --------------------------------------------------
+        # ML Prediction
+        # --------------------------------------------------
+        ml_crop = predict_crop_ml(
+            N, P, K,
+            temperature, humidity, ph, rainfall
+        )
+
+        # --------------------------------------------------
         # Rule Engine
-        deficiencies = detect_deficiencies(
-            crop,
-            ph,
-            N,
-            P,
-            K
-        )
+        # --------------------------------------------------
+        deficiencies = detect_deficiencies(crop, ph, N, P, K)
 
-        fertilizers = get_fertilizer_recommendations(
-            crop,
-            ph,
-            N,
-            P,
-            K
-        )
+        fertilizers = get_fertilizer_recommendations(crop, ph, N, P, K)
 
-        improvement_plan = get_improvement_plan(
-            crop,
-            ph,
-            N,
-            P,
-            K
-        )
+        improvement_plan = get_improvement_plan(crop, ph, N, P, K)
 
-        soil_health = calculate_soil_health_score(
-            crop,
-            ph,
-            N,
-            P,
-            K
-        )
+        soil_health = calculate_soil_health_score(crop, ph, N, P, K)
 
+        # --------------------------------------------------
+        # AI Prompt
+        # --------------------------------------------------
         prompt = f"""
 You are an expert agricultural advisor for Indian farmers.
 
 IMPORTANT:
 - Respond ONLY in {language}.
-- Do not mix languages.
-- Use simple farmer-friendly words.
-- Keep the response short and practical.
+- Keep it simple and practical.
 
 Crop: {CROPS[crop]['name']}
 
-Soil Test Results:
+Soil:
 - pH: {ph}
-- Nitrogen: {N}
-- Phosphorus: {P}
-- Potassium: {K}
+- N: {N}
+- P: {P}
+- K: {K}
 
-Detected Problems:
+Deficiencies:
 {deficiencies}
 
-Fertilizer Recommendations:
+Fertilizers:
 {fertilizers}
 
-Improvement Plan:
+Plan:
 {improvement_plan}
 
-Write a farmer advisory.
-
-Include:
-1. Soil condition.
-2. Main nutrient deficiencies.
-3. Recommended fertilizers/actions.
-4. Positive encouragement.
-
-Maximum 5 short sentences.
+Give short farmer advice in 4-5 lines.
 """
 
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt
-        )
+        ai_summary = get_ai_summary(prompt)
 
-        ai_summary = response.text
-
+        # --------------------------------------------------
+        # FINAL RESPONSE (NEVER EMPTY)
+        # --------------------------------------------------
         return {
             "success": True,
 
@@ -159,6 +175,7 @@ Maximum 5 short sentences.
             "soil_health_status": soil_health["status"],
 
             "crop": CROPS[crop]["name"],
+            "ml_predicted_crop": ml_crop,
 
             "ph": ph,
             "N": N,
@@ -171,14 +188,11 @@ Maximum 5 short sentences.
 
             "ai_summary": ai_summary,
 
-            "overall_status": (
-                "Good"
-                if len(deficiencies) == 0
-                else "Needs Attention"
-            )
+            "overall_status": "Good" if len(deficiencies) == 0 else "Needs Attention"
         }
 
     except Exception as e:
+        print("Backend Error:", e)
         return {
             "success": False,
             "error": str(e)
@@ -186,7 +200,7 @@ Maximum 5 short sentences.
 
 
 # --------------------------------------------------
-# Crop Comparison Endpoint
+# CROP COMPARISON
 # --------------------------------------------------
 @app.post("/compare-crops")
 async def compare_crops(data: dict):
@@ -197,12 +211,7 @@ async def compare_crops(data: dict):
         P = float(data["phosphorus"])
         K = float(data["potassium"])
 
-        rankings = calculate_suitability_all_crops(
-            ph,
-            N,
-            P,
-            K
-        )
+        rankings = calculate_suitability_all_crops(ph, N, P, K)
 
         return {
             "success": True,
@@ -217,7 +226,7 @@ async def compare_crops(data: dict):
 
 
 # --------------------------------------------------
-# Chatbot Endpoint
+# CHATBOT
 # --------------------------------------------------
 @app.post("/chat")
 async def chat(data: dict):
@@ -228,33 +237,19 @@ async def chat(data: dict):
         soil_context = data.get("soil_context", "")
 
         prompt = f"""
-You are KisanBot, an expert agricultural advisor for farmers.
+You are KisanBot.
 
-Always use the provided soil report while answering.
-
-Current Soil Report:
+Soil Context:
 {soil_context}
 
-Language: {language}
-
-Farmer Question:
+Question:
 {user_message}
 
-Instructions:
-1. Analyze the soil report before answering.
-2. Mention soil deficiencies if relevant.
-3. Recommend suitable crops when asked.
-4. Recommend fertilizers when asked.
-5. Explain in simple farmer-friendly language.
-6. If the question is unrelated to farming, politely redirect to agriculture topics.
-7. Keep answers practical and under 150 words.
-8. Address the farmer respectfully.
-
-Provide a clear and actionable answer.
+Reply in simple farmer language under 150 words.
 """
 
         response = client.models.generate_content(
-            model="gemini-2.5-flash",
+            model="gemini-1.5-flash-latest",
             contents=prompt
         )
 
@@ -267,9 +262,3 @@ Provide a clear and actionable answer.
         return {
             "error": str(e)
         }
-
-
-# --------------------------------------------------
-# Run
-# --------------------------------------------------
-# uvicorn main:app --reload

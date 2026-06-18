@@ -22,6 +22,7 @@ function Dashboard({ analysis, rankings, setView }) {
   if (!analysis) {
     return <h2>No analysis data available.</h2>;
   }
+  console.log("ANALYSIS DATA:", analysis);
   const npkData = [
     { name: "Nitrogen", value: analysis.N || 0 },
     { name: "Phosphorus", value: analysis.P || 0 },
@@ -103,6 +104,11 @@ function Dashboard({ analysis, rankings, setView }) {
   <h3>🏆 Best Crop</h3>
   <h2>{rankings?.[0]?.crop || analysis.crop}</h2>
 </div>
+       <div className="stat-card">
+  <h3>🤖 AI Recommended Crop</h3>
+  <h2>{analysis?.ml_predicted_crop}</h2>
+</div>
+    
       </div>
       <button onClick={downloadReport} className="download-btn">
         📄 Download Soil Report

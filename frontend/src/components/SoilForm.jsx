@@ -4,14 +4,15 @@ import "./SoilForm.css";
 
 function SoilForm({ onResult }) {
   const [formData, setFormData] = useState({
-    crop: "Rice",
-    nitrogen: "",
-    phosphorus: "",
-    potassium: "",
-    ph: "",
-    rainfall: "",
-    temperature: "",
-  });
+  crop: "Rice",
+  nitrogen: "",
+  phosphorus: "",
+  potassium: "",
+  ph: "",
+  rainfall: "",
+  temperature: "",
+  humidity: "",
+});
 
   const [loading, setLoading] = useState(false);
 
@@ -127,6 +128,14 @@ const handleSubmit = async (e) => {
             onChange={handleChange}
             required
           />
+          <label>Humidity (%)</label>
+<input
+  type="number"
+  name="humidity"
+  value={formData.humidity}
+  onChange={handleChange}
+  required
+/>  
 
           <button type="submit" disabled={loading}>
             {loading ? "Analyzing..." : "Start Soil Analysis"}
