@@ -3,72 +3,120 @@ import "./LandingPage.css";
 function LandingPage({ onStart }) {
   return (
     <div className="landing">
+      {/* HERO SECTION */}
       <div className="hero">
         <div className="hero-overlay"></div>
+
         <div className="hero-content">
           <div className="hero-icon">🌱</div>
+
           <h1 className="hero-title">
             AI Soil Health
             <br />
-            Advisory System
+            & Crop Advisory System
           </h1>
+
           <p className="hero-subtitle">
-            Analyze soil health, get crop recommendations, fertilizer
-            suggestions and AI-powered farming guidance.
+            Empowering farmers with Machine Learning, Soil Intelligence,
+            Crop Prediction, and AI-driven recommendations for smarter farming.
           </p>
+
           <button
-  className="hero-btn"
-  onClick={() => {
-    console.log("Button Clicked");
-    console.log("Calling onStart");
-    onStart();
-  }}
->
-  Start Soil Analysis →
-</button>
-          <div className="hero-badge">
-            🏆 Team CodeHarvest · TechForGood 2026
+            className="hero-btn"
+            onClick={() => {
+              onStart();
+            }}
+          >
+            🚀 Start Soil Analysis
+          </button>
+
+          <div className="hero-badges">
+            <span>🤖 Machine Learning</span>
+            <span>📊 Soil Analytics</span>
+            <span>🌾 Crop Prediction</span>
+            <span>🌍 Multilingual</span>
           </div>
         </div>
       </div>
 
+      {/* FEATURES SECTION */}
       <section className="features">
-        <h2 className="features-title">Why Use Our System?</h2>
+        <h2 className="features-title">
+          Smart Farming Powered by AI
+        </h2>
+
         <p className="features-subtitle">
-          Everything a farmer needs to make smarter soil decisions
+          Everything needed to analyze soil health and maximize crop productivity.
         </p>
 
         <div className="feature-grid">
           <div className="feature-card">
             <div className="feature-icon">🌾</div>
             <h3>Crop Recommendation</h3>
-            <p>Find the most suitable crop for your soil.</p>
+            <p>
+              Machine Learning predicts the most suitable crop for your soil.
+            </p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">📊</div>
-            <h3>Soil Analysis</h3>
-            <p>Get instant soil health insights.</p>
+            <h3>Soil Health Analysis</h3>
+            <p>
+              Evaluate soil quality using NPK levels, pH, moisture and climate.
+            </p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">🤖</div>
-            <h3>AI Assistant</h3>
-            <p>Ask farming questions anytime.</p>
+            <h3>AI Advisory</h3>
+            <p>
+              Receive intelligent recommendations powered by AI.
+            </p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon">🧪</div>
+            <h3>Fertilizer Guidance</h3>
+            <p>
+              Detect nutrient deficiencies and get fertilizer suggestions.
+            </p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">📈</div>
-            <h3>Improvement Plan</h3>
-            <p>Improve soil quality with smart suggestions.</p>
+            <h3>Soil Improvement Plan</h3>
+            <p>
+              Improve long-term soil health with actionable recommendations.
+            </p>
+          </div>
+
+          <div className="feature-card">
+            <div className="feature-icon">🌍</div>
+            <h3>Multilingual Support</h3>
+            <p>
+              Accessible guidance for farmers in multiple languages.
+            </p>
           </div>
         </div>
       </section>
 
-      <footer className="landing-footer">
-        <strong>KisanSaathi</strong> · Powered by Google Gemini AI · Team
-        CodeHarvest · IEEE MIT-ADT University
-      </footer>
+      {/* STATS SECTION */}
+      <section className="stats-section">
+        <div className="stat-card">
+          <h2>⚡ AI Powered</h2>
+          <p>Real-time soil insights and recommendations</p>
+        </div>
+
+        <div className="stat-card">
+          <h2>🎯 ML Based</h2>
+          <p>Crop prediction using trained machine learning models</p>
+        </div>
+
+        <div className="stat-card">
+          <h2>🌱 Sustainable Farming</h2>
+          <p>Promoting efficient resource utilization and soil health</p>
+        </div>
+      </section>
     </div>
   );
 }

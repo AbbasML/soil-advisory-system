@@ -37,8 +37,11 @@ function Chatbot({ analysis, language, setView }) {
 
       const botMessage = {
   role: "bot",
-  text: res.data.reply,
-      };
+  text:
+    res.data.reply ||
+    res.data.error ||
+    "KisanBot could not generate a response.",
+};
 
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {

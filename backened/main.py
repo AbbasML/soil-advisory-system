@@ -249,9 +249,9 @@ Reply in simple farmer language under 150 words.
 """
 
         response = client.models.generate_content(
-            model="gemini-1.5-flash-latest",
-            contents=prompt
-        )
+    model="gemini-2.5-flash",
+    contents=prompt
+)
 
         return {
             "reply": response.text,

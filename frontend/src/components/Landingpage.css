@@ -1,3 +1,11 @@
+body {
+  background: linear-gradient(
+    180deg,
+    #f0fdf4 0%,
+    #ffffff 50%,
+    #f0fdf4 100%
+  );
+}
 /* ═══════════════════════════════════════
    LANDING PAGE — Agriculture Theme
 ═══════════════════════════════════════ */
@@ -39,11 +47,19 @@
 .hero-content {
   position: relative;
   z-index: 1;
-  max-width: 680px;
+  max-width: 800px;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.08);
+
+  border: 1px solid rgba(255,255,255,0.15);
+
+  padding: 40px;
+  border-radius: 24px;
 }
 
 .hero-icon {
@@ -53,12 +69,12 @@
 }
 
 .hero-title {
-  font-size: clamp(28px, 5vw, 44px);
+  font-size: clamp(34px, 6vw, 58px);
   font-weight: 800;
-  color: #ffffff;
-  line-height: 1.25;
-  margin-bottom: 18px;
-  letter-spacing: -0.01em;
+  color: white;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: -1px;
 }
 
 .hero-subtitle {
@@ -91,15 +107,27 @@
   box-shadow: 0 12px 28px rgba(234, 179, 8, 0.45);
 }
 
-.hero-badge {
-  margin-top: 24px;
-  font-size: 12.5px;
-  font-weight: 500;
-  color: #fde68a;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(250, 204, 21, 0.3);
-  padding: 6px 18px;
-  border-radius: 20px;
+.hero-badges {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 30px;
+}
+
+.hero-badges span {
+  background: rgba(255,255,255,0.12);
+  color: white;
+
+  padding: 10px 18px;
+
+  border-radius: 30px;
+
+  font-size: 13px;
+
+  border: 1px solid rgba(255,255,255,0.2);
+
+  backdrop-filter: blur(10px);
 }
 
 /* ── FEATURES SECTION ── */
@@ -130,26 +158,28 @@
 }
 
 .feature-card {
-  background: #ffffff;
-  border-radius: 18px;
-  padding: 32px 24px;
-  box-shadow: 0 2px 16px rgba(20, 83, 45, 0.07);
-  border: 1px solid #ecfdf5;
-  transition:
-    transform 0.2s,
-    box-shadow 0.2s;
-  text-align: center;
+  background: white;
+
+  border-radius: 24px;
+
+  padding: 35px 28px;
+
+  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+
+  transition: all 0.3s ease;
+
+  border: none;
 }
 
 .feature-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(20, 83, 45, 0.12);
+  transform: translateY(-10px);
+
+  box-shadow: 0 25px 45px rgba(22,101,52,0.18);
 }
 
 .feature-icon {
-  font-size: 38px;
-  margin-bottom: 14px;
-  line-height: 1;
+  font-size: 50px;
+  margin-bottom: 18px;
 }
 
 .feature-card h3 {
@@ -192,5 +222,60 @@
 
   .features {
     padding: 48px 18px 30px;
+  }
+}
+.stats-section {
+  max-width: 1200px;
+
+  margin: 50px auto 80px;
+
+  padding: 0 24px;
+
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 20px;
+}
+
+.stat-card {
+  background: linear-gradient(
+    135deg,
+    #166534,
+    #22c55e
+  );
+
+  color: white;
+
+  padding: 30px;
+
+  border-radius: 24px;
+
+  text-align: center;
+
+  box-shadow: 0 15px 35px rgba(34,197,94,0.2);
+}
+
+.stat-card h2 {
+  font-size: 24px;
+  margin-bottom: 10px;
+}
+
+.stat-card p {
+  opacity: 0.9;
+  line-height: 1.6;
+}
+@media (max-width: 768px) {
+
+  .feature-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats-section {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-content {
+    padding: 25px;
   }
 }

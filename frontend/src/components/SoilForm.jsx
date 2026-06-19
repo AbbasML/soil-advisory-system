@@ -53,13 +53,26 @@ const handleSubmit = async (e) => {
 };
 
   return (
-    <div className="soil-form-container">
-      <div className="soil-card">
-        <h1>🌱 Soil Analysis Form</h1>
-        <p>Enter your soil details below</p>
+  <div className="soil-form-container">
+    <div className="soil-form-header">
+      <h1>🌱 AI Soil Analysis</h1>
+      <p>
+        Enter soil and environmental parameters to get crop
+        recommendations, soil health insights and AI-powered guidance.
+      </p>
+    </div>
 
-        <form onSubmit={handleSubmit}>
-          <label>Crop</label>
+    <div className="quick-features">
+      <div className="quick-card">🤖 ML Prediction</div>
+      <div className="quick-card">📊 Soil Analytics</div>
+      <div className="quick-card">🌾 Crop Recommendation</div>
+    </div>
+
+    <div className="soil-card">
+      <form onSubmit={handleSubmit} className="soil-form-grid">
+
+        <div className="input-group">
+          <label>🌾 Crop</label>
           <select
             name="crop"
             value={formData.crop}
@@ -71,8 +84,10 @@ const handleSubmit = async (e) => {
             <option>Soybean</option>
             <option>Cotton</option>
           </select>
+        </div>
 
-          <label>Nitrogen (N)</label>
+        <div className="input-group">
+          <label>🧪 Nitrogen (N)</label>
           <input
             type="number"
             name="nitrogen"
@@ -80,8 +95,10 @@ const handleSubmit = async (e) => {
             onChange={handleChange}
             required
           />
+        </div>
 
-          <label>Phosphorus (P)</label>
+        <div className="input-group">
+          <label>🧪 Phosphorus (P)</label>
           <input
             type="number"
             name="phosphorus"
@@ -89,8 +106,10 @@ const handleSubmit = async (e) => {
             onChange={handleChange}
             required
           />
+        </div>
 
-          <label>Potassium (K)</label>
+        <div className="input-group">
+          <label>🧪 Potassium (K)</label>
           <input
             type="number"
             name="potassium"
@@ -98,20 +117,24 @@ const handleSubmit = async (e) => {
             onChange={handleChange}
             required
           />
+        </div>
 
-          <label>pH</label>
+        <div className="input-group">
+          <label>⚗️ pH</label>
           <input
-  type="number"
-  step="0.1"
-  min="0"
-  max="14"
-  name="ph"
-  value={formData.ph}
-  onChange={handleChange}
-  required
-/>
+            type="number"
+            step="0.1"
+            min="0"
+            max="14"
+            name="ph"
+            value={formData.ph}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-          <label>Rainfall (mm)</label>
+        <div className="input-group">
+          <label>🌧️ Rainfall (mm)</label>
           <input
             type="number"
             name="rainfall"
@@ -119,8 +142,10 @@ const handleSubmit = async (e) => {
             onChange={handleChange}
             required
           />
+        </div>
 
-          <label>Temperature (°C)</label>
+        <div className="input-group">
+          <label>🌡️ Temperature (°C)</label>
           <input
             type="number"
             name="temperature"
@@ -128,22 +153,31 @@ const handleSubmit = async (e) => {
             onChange={handleChange}
             required
           />
-          <label>Humidity (%)</label>
-<input
-  type="number"
-  name="humidity"
-  value={formData.humidity}
-  onChange={handleChange}
-  required
-/>  
+        </div>
 
+        <div className="input-group">
+          <label>💧 Humidity (%)</label>
+          <input
+            type="number"
+            name="humidity"
+            value={formData.humidity}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="submit-section">
           <button type="submit" disabled={loading}>
-            {loading ? "Analyzing..." : "Start Soil Analysis"}
+            {loading
+              ? "🔍 Analyzing Soil..."
+              : "🚀 Analyze Soil"}
           </button>
-        </form>
-      </div>
+        </div>
+
+      </form>
     </div>
-  );
+  </div>
+);
 }
 
 export default SoilForm;

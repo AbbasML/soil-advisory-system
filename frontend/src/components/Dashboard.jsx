@@ -1,3 +1,4 @@
+import "./Dashboard.css";
 import SoilHealthCard from "./SoilHealthCard";
 import BestCropCard from "./BestCropCard";
 import DeficiencyCard from "./DeficiencyCard";
@@ -17,6 +18,7 @@ import {
   Cell,
 } from "recharts";
 import jsPDF from "jspdf";
+import SoilHealthGauge from "./SoilHealthGauge";
 function Dashboard({ analysis, rankings, setView }) {
   console.log("Analysis Data:", analysis);
   if (!analysis) {
@@ -90,23 +92,25 @@ function Dashboard({ analysis, rankings, setView }) {
         <p>Smart Soil Analysis • Crop Recommendation • AI Advisory</p>
       </div>
       <div className="stats-row">
-        <div className="stat-card">
-          <h3>🌱 Soil Health</h3>
-          <h2>{analysis.soil_health_score}/100</h2>
-        </div>
+        <div className="stat-card soil-health-card">
+  <h3>🌱 Soil Health</h3>
+  <h2>{analysis.soil_health_score}/100</h2>
 
-        <div className="stat-card">
-          <h3>🏆 Best Crop</h3>
-          <h2>{analysis.crop}</h2>
-        </div>
-
-        <div className="stat-card">
-  <h3>🏆 Best Crop</h3>
-  <h2>{rankings?.[0]?.crop || analysis.crop}</h2>
+  <span className="status-badge">
+    {analysis.soil_health_status}
+  </span>
 </div>
-       <div className="stat-card">
-  <h3>🤖 AI Recommended Crop</h3>
+
+        <div className="stat-card best-crop-card">
+  <h3>🏆 Recommended Crop</h3>
+  <h2>{rankings?.[0]?.crop || analysis.crop}</h2>
+  <p>Based on Soil Analysis & Suitability Score</p>
+</div>
+
+<div className="stat-card ai-card">
+  <h3>🤖 ML Prediction</h3>
   <h2>{analysis?.ml_predicted_crop}</h2>
+  <p>Predicted by Machine Learning Model</p>
 </div>
     
       </div>
@@ -142,27 +146,10 @@ function Dashboard({ analysis, rankings, setView }) {
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div className="card">
-          <h2>Soil Health Score</h2>
-
-          <ResponsiveContainer width="100%" height={250}>
-            <PieChart>
-              <Pie
-  data={soilHealthData}
-  dataKey="value"
-  nameKey="name"
-  outerRadius={80}
-  label
->
-  <Cell fill="#2d6a4f" />
-  <Cell fill="#d9d9d9" />
-</Pie>
-              <Tooltip />
-            </PieChart>
-          </ResponsiveContainer>
-
-          <p>Current Score: {analysis.soil_health_score}/100</p>
-        </div>
+        <SoilHealthGauge
+  score={analysis.soil_health_score}
+  status={analysis.soil_health_status}
+/>
 
         <BestCropCard
   crop={rankings?.[0]?.crop || analysis.crop}
