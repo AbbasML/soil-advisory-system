@@ -5,7 +5,9 @@ import "./SoilForm.css";
 
 function SoilForm({ onResult, language }) {
   const t = translations[language] || translations["English"];
+  const [crops, setCrops] = useState([]);
   const [formData, setFormData] = useState({
+    crop: "",
     nitrogen: "",
     phosphorus: "",
     potassium: "",
@@ -16,6 +18,30 @@ function SoilForm({ onResult, language }) {
   });
 
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+    const fetchCrops = async () => {
+      try {
+        const response = await getCropsList();
+        if (isMounted && response.data) {
+          setCrops(response.data);
+          if (response.data.length > 0) {
+            setFormData((prev) => ({
+              ...prev,
+              crop: response.data[0].id,
+            }));
+          }
+        }
+      } catch (err) {
+        console.error("Error fetching crops list:", err);
+      }
+    };
+    fetchCrops();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
