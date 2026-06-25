@@ -43,47 +43,12 @@ function Dashboard({ analysis, rankings, setView, language }) {
     return cropTranslationMap[cropName]?.[language] || cropName;
   };
 
-  const npkData = [
-    {
-      name:
-        language === "Hindi"
-          ? "नाइट्रोजन"
-          : language === "Marathi"
-          ? "नायट्रोजन"
-          : language === "Gujarati"
-          ? "નાઇટ્રોજન"
-          : "Nitrogen",
-      value: analysis.N || 0,
-    },
-    {
-      name:
-        language === "Hindi"
-          ? "फास्फोरस"
-          : language === "Marathi"
-          ? "फॉस्फरस"
-          : language === "Gujarati"
-          ? "ફોસ્ફરસ"
-          : "Phosphorus",
-      value: analysis.P || 0,
-    },
-    {
-      name:
-        language === "Hindi"
-          ? "पोटेशियम"
-          : language === "Marathi"
-          ? "पोटॅशियम"
-          : language === "Gujarati"
-          ? "પોટેશિયમ"
-          : "Potassium",
-      value: analysis.K || 0,
-    },
-  ];
-
   const cropData =
     rankings?.slice(0, 5).map((crop) => ({
       crop: getTranslatedCropName(crop.crop),
       score: crop.score,
     })) || [];
+
   const downloadReport = () => {
     const doc = new jsPDF();
 
@@ -124,6 +89,7 @@ function Dashboard({ analysis, rankings, setView, language }) {
 
     doc.save("soil-report.pdf");
   };
+
   const statusMap = {
     Excellent: { English: "Excellent", Hindi: "उत्कृष्ट", Marathi: "उत्कृष्ट", Gujarati: "ઉત્કૃષ્ટ" },
     Good: { English: "Good", Hindi: "अच्छा", Marathi: "चांगले", Gujarati: "સારું" },
@@ -141,6 +107,7 @@ function Dashboard({ analysis, rankings, setView, language }) {
         <h1>{t.dashHeaderTitle}</h1>
         <p>{t.dashHeaderSub}</p>
       </div>
+
       <div className="stats-row">
         <div className="stat-card soil-health-card">
           <h3>{t.dashSoilHealth}</h3>
@@ -153,22 +120,43 @@ function Dashboard({ analysis, rankings, setView, language }) {
 
         <div className="stat-card best-crop-card">
           <h3>{t.dashRecCrop}</h3>
-          <h2>{getTranslatedCropName(rankings?.[0]?.crop || analysis.recommended_crop)}</h2>
+          <h2>{getTranslatedCropName(analysis.recommended_crop)}</h2>
           <p>{t.dashBasedOn}</p>
         </div>
-    
       </div>
+
       <button onClick={downloadReport} className="download-btn">
         {t.dashDownload}
       </button>
+
       <div className="dashboard-grid">
-        <SoilHealthCard
+        {/* ROW 1: Soil Health Indicator and Recommended/Alternative Crops */}
+        <SoilHealthGauge
           score={analysis.soil_health_score}
           status={getTranslatedStatus(analysis.soil_health_status)}
         />
+
+        <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+          <BestCropCard
+            title={language === "Hindi" ? "🏆 अनुशंसित फसल (ML)" : language === "Marathi" ? "🏆 शिफारस केलेले पीक (ML)" : language === "Gujarati" ? "🏆 ભલામણ કરેલ પાક (ML)" : "🏆 Recommended Crop (ML)"}
+            crop={getTranslatedCropName(analysis.recommended_crop)}
+            rawCropName={analysis.recommended_crop}
+            score={rankings?.find(r => r.crop.toLowerCase() === analysis.recommended_crop?.toLowerCase())?.score || rankings?.[0]?.score || 0}
+            subtitle={language === "Hindi" ? "मशीन लर्निंग मॉडल द्वारा मिट्टी और मौसम के मानदंडों का उपयोग करके अनुमानित फसल।" : language === "Marathi" ? "माती आणि हवामानाच्या निकषांचा वापर करून मशीन लर्निंग मॉडेलद्वारे अंदाजित पीक." : language === "Gujarati" ? "મશીન લર્નિંગ મોડલ દ્વારા માટી અને હવામાનના પરિમાણોનો ઉપયોગ કરીને અનુમાનિત પાક." : "Most suitable crop predicted by Machine Learning model using soil and weather parameters."}
+          />
+          <BestCropCard
+            title={language === "Hindi" ? "🌾 वैकल्पिक फसल (नियम इंजन)" : language === "Marathi" ? "🌾 पर्यायी पीक (नियम इंजिन)" : language === "Gujarati" ? "🌾 વૈકલ્પિક પાક (નિયમ એન્જિન)" : "🌾 Alternative Crop (Rule Engine)"}
+            crop={getTranslatedCropName(analysis.alternative_crop)}
+            rawCropName={analysis.alternative_crop}
+            score={rankings?.find(r => r.crop.toLowerCase() === analysis.alternative_crop?.toLowerCase())?.score || rankings?.[1]?.score || 0}
+            icon="🌱"
+            subtitle={language === "Hindi" ? "एनपीके और पीएच सीमाओं के आधार पर नियम इंजन द्वारा सुझाई गई वैकल्पिक फसल।" : language === "Marathi" ? "एनपीके आणि पीएच मर्यादांवर आधारित नियम इंजिनद्वारे सुचविलेले पर्यायी पीक." : language === "Gujarati" ? "NPK અને pH મર્યાદાના આધारे નિયમ એન્જિન દ્વારા સૂચવવામાં આવેલ વૈકલ્પિક પાક." : "Alternative crop recommendation computed by the rule-engine based on NPK & pH thresholds."}
+          />
+        </div>
+
+        {/* ROW 2: Crop Recommendations Chart & Nutrient Analysis Chart */}
         <div className="card">
           <h2>{t.dashTopCrops}</h2>
-
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={cropData}>
               <XAxis dataKey="crop" />
@@ -178,28 +166,15 @@ function Dashboard({ analysis, rankings, setView, language }) {
             </BarChart>
           </ResponsiveContainer>
         </div>
-        <div className="card">
-          <h2>{t.dashNpkAnalysis}</h2>
 
-          <ResponsiveContainer width="100%" height={300}>
-            <BarChart data={npkData}>
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="value" fill="#e9c46a" />
-            </BarChart>
-          </ResponsiveContainer>
-        </div>
-        <SoilHealthGauge
-          score={analysis.soil_health_score}
-          status={getTranslatedStatus(analysis.soil_health_status)}
+        <NutrientChart
+          N={analysis.N || 0}
+          P={analysis.P || 0}
+          K={analysis.K || 0}
+          ph={analysis.ph || 0}
         />
 
-        <BestCropCard
-          crop={getTranslatedCropName(rankings?.[0]?.crop || analysis.recommended_crop)}
-          score={rankings?.[0]?.score || 0}
-        />
-
+        {/* ROW 3: Deficiencies and Improvement Plans */}
         <DeficiencyCard deficiencies={analysis.deficiencies || []} />
 
         <SoilManagementCard recommendations={analysis.improvement_plan || []} />
@@ -208,26 +183,21 @@ function Dashboard({ analysis, rankings, setView, language }) {
       <AISummaryCard summary={analysis.ai_summary} language={language} />
 
       <div style={{ marginTop: "20px" }}>
-        <NutrientChart
-          N={analysis.N || 0}
-          P={analysis.P || 0}
-          K={analysis.K || 0}
-          ph={analysis.ph || 0}
-        />
-      </div>
-
-      <div style={{ marginTop: "20px" }}>
         <CropRankingTable crops={rankings || []} />
       </div>
-      <button
-        onClick={() => setView("form")}
-        className="download-btn"
-      >
-        {t.dashAnalyzeAnother}
-      </button>
-      <button onClick={() => setView("chat")} className="chat-btn">
-        {t.dashAskKisan}
-      </button>
+
+      <div className="dashboard-action-buttons" style={{ display: "flex", gap: "20px", justifyContent: "center", marginTop: "30px" }}>
+        <button
+          onClick={() => setView("form")}
+          className="download-btn"
+          style={{ margin: "0" }}
+        >
+          {t.dashAnalyzeAnother}
+        </button>
+        <button onClick={() => setView("chat")} className="chat-btn" style={{ margin: "0" }}>
+          {t.dashAskKisan}
+        </button>
+      </div>
     </div>
   );
 }

@@ -176,6 +176,7 @@
   border-bottom: 2px solid rgba(45, 106, 79, 0.08);
   padding-bottom: 12px;
   margin-bottom: 4px;
+  text-align: left;
 }
 
 /* ── ACTION BUTTON GROUP ── */
@@ -215,6 +216,118 @@
   border: 1px solid rgba(45, 106, 79, 0.15);
 }
 
+/* ── BEST CROP CARD OVERHAUL ── */
+.best-crop-card-main {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  overflow: hidden;
+  box-shadow: var(--shadow-md);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+}
+
+.best-crop-card-main:hover {
+  transform: translateY(-5px);
+  border-color: var(--green-accent);
+  box-shadow: var(--shadow-lg);
+  background: rgba(255, 255, 255, 0.85);
+}
+
+.crop-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  overflow: hidden;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.crop-card-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.best-crop-card-main:hover .crop-card-image {
+  transform: scale(1.05);
+}
+
+.crop-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0) 40%, rgba(8, 28, 21, 0.5) 100%);
+}
+
+.crop-card-badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: rgba(8, 28, 21, 0.85);
+  color: var(--white);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.crop-card-info {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  text-align: left;
+}
+
+.crop-card-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.best-crop-name {
+  font-family: var(--font-heading);
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-align: left;
+}
+
+.crop-card-icon {
+  font-size: 1.5rem;
+}
+
+.best-crop-score {
+  background: var(--green-faint);
+  color: var(--green-main);
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: 1px solid rgba(45, 106, 79, 0.15);
+}
+
+.best-crop-text {
+  font-size: 0.84rem;
+  color: var(--gray-600);
+  line-height: 1.6;
+  font-weight: 500;
+  margin: 0;
+  text-align: left;
+}
+
 /* Animations */
 @keyframes dashboardFadeIn {
   from { opacity: 0; transform: translateY(20px); }
@@ -222,7 +335,7 @@
 }
 
 /* Responsive configurations */
-@media (max-width: 768px) {
+@media (max-width: 900px) {
   .stats-row {
     grid-template-columns: 1fr;
     gap: 16px;
@@ -233,5 +346,14 @@
   }
   .dashboard-header h1 {
     font-size: 1.8rem;
+  }
+  .dashboard-action-buttons {
+    flex-direction: column;
+    align-items: center;
+    gap: 12px !important;
+  }
+  .dashboard-action-buttons button {
+    width: 100%;
+    max-width: 320px;
   }
 }

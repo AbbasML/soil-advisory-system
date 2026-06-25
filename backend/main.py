@@ -132,11 +132,7 @@ async def analyze_soil(data: dict):
             temperature, humidity, ph, rainfall
         )
         
-        target_crop = data.get("crop")
-        if target_crop and target_crop.strip():
-            crop_key = target_crop.strip().lower()
-        else:
-            crop_key = predicted_crop.lower()
+        crop_key = predicted_crop.lower()
 
         # --------------------------------------------------
         # Rule Engine
@@ -146,7 +142,7 @@ async def analyze_soil(data: dict):
         improvement_plan = get_improvement_plan(crop_key, ph, N, P, K)
         soil_health = calculate_soil_health_score(crop_key, ph, N, P, K)
 
-        # Calculate alternative crop
+        # Calculate alternative crop using rule-engine rankings
         rankings = calculate_suitability_all_crops(ph, N, P, K)
         alternative_crop_display = "Wheat"
         for r in rankings:
@@ -164,7 +160,6 @@ async def analyze_soil(data: dict):
         # AI Prompt
         # --------------------------------------------------
         prompt = f"""
-Target Crop: {crop_key.capitalize()}
 Recommended Crop: {predicted_crop.capitalize()}
 Alternative Crop: {alternative_crop_display}
 
@@ -198,7 +193,6 @@ Improvement Plan:
             "soil_health_score": soil_health["score"],
             "soil_health_status": soil_health["status"],
 
-            "target_crop": crop_key.capitalize(),
             "recommended_crop": predicted_crop.capitalize(),
             "alternative_crop": alternative_crop_display,
 

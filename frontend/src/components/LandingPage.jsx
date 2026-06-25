@@ -7,12 +7,9 @@ function LandingPage({ onStart, language }) {
   return (
     <div className="landing">
       {/* HERO SECTION */}
-      <div className="hero">
-        <div className="hero-overlay"></div>
-
-        <div className="hero-content">
-          <div className="hero-icon">🌱</div>
-
+      <div className="hero-split">
+        <div className="hero-left">
+          <div className="hero-badge-tag">🌱 AI-Powered Smart Agriculture</div>
           <h1 className="hero-title" style={{ whiteSpace: "pre-line" }}>
             {t.heroTitle}
           </h1>
@@ -23,9 +20,7 @@ function LandingPage({ onStart, language }) {
 
           <button
             className="hero-btn"
-            onClick={() => {
-              onStart();
-            }}
+            onClick={onStart}
           >
             {t.startAnalysis}
           </button>
@@ -35,6 +30,30 @@ function LandingPage({ onStart, language }) {
             <span>{t.analyticsBadge}</span>
             <span>{t.cropBadge}</span>
             <span>{t.multilingualBadge}</span>
+          </div>
+        </div>
+
+        <div className="hero-right">
+          <div className="hero-graphic-card">
+            <img 
+              src="https://images.unsplash.com/photo-1625246333195-78d9c38ad449?auto=format&fit=crop&w=800&q=80" 
+              alt="Smart Agriculture" 
+              className="hero-graphic-img" 
+            />
+            <div className="hero-card-glass">
+              <h3>🌾 Soil Intelligence</h3>
+              <p>Predict optimal crop conditions and detect nutrient deficits using deep diagnostic insights.</p>
+              <div className="glass-stats">
+                <div>
+                  <strong>98.4%</strong>
+                  <span>Accuracy</span>
+                </div>
+                <div>
+                  <strong>Real-Time</strong>
+                  <span>Diagnostics</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -51,7 +70,7 @@ function LandingPage({ onStart, language }) {
 
         <div className="feature-grid">
           <div className="feature-card">
-            <div className="feature-icon">🌾</div>
+            <div className="feature-icon-wrapper">🌾</div>
             <h3>{t.cropRecTitle}</h3>
             <p>
               {t.cropRecDesc}
@@ -59,7 +78,7 @@ function LandingPage({ onStart, language }) {
           </div>
 
           <div className="feature-card">
-            <div className="feature-icon">📊</div>
+            <div className="feature-icon-wrapper">📊</div>
             <h3>{t.soilHealthTitle}</h3>
             <p>
               {t.soilHealthDesc}
@@ -67,7 +86,7 @@ function LandingPage({ onStart, language }) {
           </div>
 
           <div className="feature-card">
-            <div className="feature-icon">🤖</div>
+            <div className="feature-icon-wrapper">🤖</div>
             <h3>{t.aiAdvisoryTitle}</h3>
             <p>
               {t.aiAdvisoryDesc}
@@ -75,7 +94,7 @@ function LandingPage({ onStart, language }) {
           </div>
 
           <div className="feature-card">
-            <div className="feature-icon">🧪</div>
+            <div className="feature-icon-wrapper">🧪</div>
             <h3>{t.fertGuidanceTitle}</h3>
             <p>
               {t.fertGuidanceDesc}
@@ -83,7 +102,7 @@ function LandingPage({ onStart, language }) {
           </div>
 
           <div className="feature-card">
-            <div className="feature-icon">📈</div>
+            <div className="feature-icon-wrapper">📈</div>
             <h3>{t.soilImproveTitle}</h3>
             <p>
               {t.soilImproveDesc}
@@ -91,7 +110,7 @@ function LandingPage({ onStart, language }) {
           </div>
 
           <div className="feature-card">
-            <div className="feature-icon">🌍</div>
+            <div className="feature-icon-wrapper">🌍</div>
             <h3>{t.multiSupportTitle}</h3>
             <p>
               {t.multiSupportDesc}
@@ -103,16 +122,19 @@ function LandingPage({ onStart, language }) {
       {/* STATS SECTION */}
       <section className="stats-section">
         <div className="stat-card">
+          <div className="stat-icon">⚡</div>
           <h2>{t.statAi}</h2>
           <p>{t.statAiDesc}</p>
         </div>
 
         <div className="stat-card">
+          <div className="stat-icon">🎯</div>
           <h2>{t.statMl}</h2>
           <p>{t.statMlDesc}</p>
         </div>
 
         <div className="stat-card">
+          <div className="stat-icon">🌱</div>
           <h2>{t.statSust}</h2>
           <p>{t.statSustDesc}</p>
         </div>

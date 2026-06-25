@@ -1,13 +1,11 @@
-import { useState, useEffect } from "react";
-import { analyzeSoil, compareCrops, getCropsList } from "../services/api";
+import { useState } from "react";
+import { analyzeSoil, compareCrops } from "../services/api";
 import { translations } from "../services/translations";
 import "./SoilForm.css";
 
 function SoilForm({ onResult, language }) {
   const t = translations[language] || translations["English"];
-  const [crops, setCrops] = useState([]);
   const [formData, setFormData] = useState({
-    crop: "",
     nitrogen: "",
     phosphorus: "",
     potassium: "",
@@ -18,30 +16,6 @@ function SoilForm({ onResult, language }) {
   });
 
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    let isMounted = true;
-    const fetchCrops = async () => {
-      try {
-        const response = await getCropsList();
-        if (isMounted && response.data) {
-          setCrops(response.data);
-          if (response.data.length > 0) {
-            setFormData((prev) => ({
-              ...prev,
-              crop: response.data[0].id,
-            }));
-          }
-        }
-      } catch (err) {
-        console.error("Error fetching crops list:", err);
-      }
-    };
-    fetchCrops();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -216,6 +190,10 @@ function SoilForm({ onResult, language }) {
     }
   };
 
+  // Calculate completeness progress
+  const filledFieldsCount = Object.values(formData).filter(v => v !== "").length;
+  const progressPercent = Math.round((filledFieldsCount / 7) * 100);
+
   return (
     <div className="soil-form-container">
       <div className="soil-form-header">
@@ -229,212 +207,239 @@ function SoilForm({ onResult, language }) {
         <div className="quick-card">🌾 {t.cropBadge.replace("🌾 ", "")}</div>
       </div>
 
-      <div className="soil-card">
-        {/* Live Weather Fetch Action Bar */}
-        <div className="weather-autofill-bar">
-          <button
-            type="button"
-            className={`btn-fetch-weather ${weatherLoading ? "loading" : ""} ${weatherSuccess ? "success" : ""}`}
-            onClick={fetchLiveWeather}
-            disabled={weatherLoading}
-          >
-            {weatherLoading ? t.fetchingWeather : weatherSuccess ? `✔️ ${t.weatherSuccess}` : t.fetchWeatherBtn}
-          </button>
-          {locationCoords && (
-            <span className="location-coords-label">
-              {t.locationLabel} {locationCoords.lat}°N, {locationCoords.lon}°E
-            </span>
-          )}
+      <div className="soil-split-container">
+        {/* LEFT PANE: EDUCATIONAL & DYNAMIC PROGRESS */}
+        <div className="soil-left-pane">
+          <div className="soil-image-card">
+            <img 
+              src="https://images.unsplash.com/photo-1595855759920-86582396756a?auto=format&fit=crop&w=600&q=80" 
+              alt="Healthy soil sprouts" 
+              className="soil-pane-img" 
+            />
+            <div className="soil-image-overlay"></div>
+            <div className="soil-pane-badge">🌱 Diagnostic Assistant</div>
+          </div>
+          
+          <div className="soil-progress-card">
+            <div className="progress-header">
+              <span>{language === "Hindi" ? "विश्लेषण तैयारी" : language === "Marathi" ? "विश्लेषण तयारी" : language === "Gujarati" ? "વિશ્લેષણ તૈયારી" : "Analysis Readiness"}</span>
+              <strong>{progressPercent}%</strong>
+            </div>
+            <div className="progress-bar-bg">
+              <div className="progress-bar-fill" style={{ width: `${progressPercent}%` }}></div>
+            </div>
+            <p className="progress-desc">
+              {filledFieldsCount === 7 
+                ? (language === "Hindi" ? "सभी फ़ील्ड भरे हुए हैं! विश्लेषण के लिए तैयार।" : "All fields filled! Ready to run full diagnostics.")
+                : (language === "Hindi" ? `${7 - filledFieldsCount} फ़ील्ड और भरें।` : `${7 - filledFieldsCount} parameters remaining to unlock diagnostics.`)}
+            </p>
+          </div>
+
+          <div className="soil-tips-card">
+            <h3>💡 Smart Farming Insights</h3>
+            <div className="tip-item">
+              <strong>⚗️ pH Balance:</strong> Slightly acidic to neutral (6.0 - 7.5) is perfect for maximum nutrient uptake.
+            </div>
+            <div className="tip-item">
+              <strong>🧪 N-P-K Ratio:</strong> Leaf growth relies on Nitrogen, strong roots on Phosphorus, and overall vitality on Potassium.
+            </div>
+            <div className="tip-item">
+              <strong>📍 Autofill advantage:</strong> Autofill uses weather coordinates to read annual rainfall patterns automatically.
+            </div>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="soil-form-grid">
-
-          <div className="input-group">
-            <label>{t.formLabelCrop}</label>
-            <select
-              name="crop"
-              value={formData.crop}
-              onChange={handleChange}
+        {/* RIGHT PANE: FORM CARD */}
+        <div className="soil-right-pane">
+          {/* Live Weather Fetch Action Bar */}
+          <div className="weather-autofill-bar">
+            <button
+              type="button"
+              className={`btn-fetch-weather ${weatherLoading ? "loading" : ""} ${weatherSuccess ? "success" : ""}`}
+              onClick={fetchLiveWeather}
+              disabled={weatherLoading}
             >
-              {crops.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {language !== "English" ? c.hindi_name || c.name : c.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="input-group">
-            <label>{t.formLabelN}</label>
-            <div className="input-with-mic">
-              <input
-                type="number"
-                name="nitrogen"
-                value={formData.nitrogen}
-                onChange={handleChange}
-                required
-              />
-              {isSpeechSupported && (
-                <button
-                  type="button"
-                  className={`form-mic-btn ${listeningField === "nitrogen" ? "active" : ""}`}
-                  onClick={() => startSpeechInput("nitrogen")}
-                  title={t.micTooltip}
-                >
-                  {listeningField === "nitrogen" ? "🎙️" : "🎤"}
-                </button>
-              )}
-            </div>
-          </div>
-
-          <div className="input-group">
-            <label>{t.formLabelP}</label>
-            <div className="input-with-mic">
-              <input
-                type="number"
-                name="phosphorus"
-                value={formData.phosphorus}
-                onChange={handleChange}
-                required
-              />
-              {isSpeechSupported && (
-                <button
-                  type="button"
-                  className={`form-mic-btn ${listeningField === "phosphorus" ? "active" : ""}`}
-                  onClick={() => startSpeechInput("phosphorus")}
-                  title={t.micTooltip}
-                >
-                  {listeningField === "phosphorus" ? "🎙️" : "🎤"}
-                </button>
-              )}
-            </div>
-          </div>
-
-          <div className="input-group">
-            <label>{t.formLabelK}</label>
-            <div className="input-with-mic">
-              <input
-                type="number"
-                name="potassium"
-                value={formData.potassium}
-                onChange={handleChange}
-                required
-              />
-              {isSpeechSupported && (
-                <button
-                  type="button"
-                  className={`form-mic-btn ${listeningField === "potassium" ? "active" : ""}`}
-                  onClick={() => startSpeechInput("potassium")}
-                  title={t.micTooltip}
-                >
-                  {listeningField === "potassium" ? "🎙️" : "🎤"}
-                </button>
-              )}
-            </div>
-          </div>
-
-          <div className="input-group">
-            <label>{t.formLabelPh}</label>
-            <div className="input-with-mic">
-              <input
-                type="number"
-                step="0.1"
-                min="0"
-                max="14"
-                name="ph"
-                value={formData.ph}
-                onChange={handleChange}
-                required
-              />
-              {isSpeechSupported && (
-                <button
-                  type="button"
-                  className={`form-mic-btn ${listeningField === "ph" ? "active" : ""}`}
-                  onClick={() => startSpeechInput("ph")}
-                  title={t.micTooltip}
-                >
-                  {listeningField === "ph" ? "🎙️" : "🎤"}
-                </button>
-              )}
-            </div>
-          </div>
-
-          <div className="input-group">
-            <label>{t.formLabelRainfall}</label>
-            <div className="input-with-mic">
-              <input
-                type="number"
-                name="rainfall"
-                value={formData.rainfall}
-                onChange={handleChange}
-                required
-              />
-              {isSpeechSupported && (
-                <button
-                  type="button"
-                  className={`form-mic-btn ${listeningField === "rainfall" ? "active" : ""}`}
-                  onClick={() => startSpeechInput("rainfall")}
-                  title={t.micTooltip}
-                >
-                  {listeningField === "rainfall" ? "🎙️" : "🎤"}
-                </button>
-              )}
-            </div>
-          </div>
-
-          <div className="input-group">
-            <label>{t.formLabelTemp}</label>
-            <div className="input-with-mic">
-              <input
-                type="number"
-                name="temperature"
-                value={formData.temperature}
-                onChange={handleChange}
-                required
-              />
-              {isSpeechSupported && (
-                <button
-                  type="button"
-                  className={`form-mic-btn ${listeningField === "temperature" ? "active" : ""}`}
-                  onClick={() => startSpeechInput("temperature")}
-                  title={t.micTooltip}
-                >
-                  {listeningField === "temperature" ? "🎙️" : "🎤"}
-                </button>
-              )}
-            </div>
-          </div>
-
-          <div className="input-group">
-            <label>{t.formLabelHumidity}</label>
-            <div className="input-with-mic">
-              <input
-                type="number"
-                name="humidity"
-                value={formData.humidity}
-                onChange={handleChange}
-                required
-              />
-              {isSpeechSupported && (
-                <button
-                  type="button"
-                  className={`form-mic-btn ${listeningField === "humidity" ? "active" : ""}`}
-                  onClick={() => startSpeechInput("humidity")}
-                  title={t.micTooltip}
-                >
-                  {listeningField === "humidity" ? "🎙️" : "🎤"}
-                </button>
-              )}
-            </div>
-          </div>
-
-          <div className="submit-section">
-            <button type="submit" disabled={loading}>
-              {loading ? t.formBtnAnalyzing : t.formBtnAnalyze}
+              {weatherLoading ? t.fetchingWeather : weatherSuccess ? `✔️ ${t.weatherSuccess}` : t.fetchWeatherBtn}
             </button>
+            {locationCoords && (
+              <span className="location-coords-label">
+                {locationCoords.lat}°N, {locationCoords.lon}°E
+              </span>
+            )}
           </div>
 
-        </form>
+          <form onSubmit={handleSubmit} className="soil-form-grid">
+            <div className="input-group">
+              <label>{t.formLabelN}</label>
+              <div className="input-with-mic">
+                <input
+                  type="number"
+                  name="nitrogen"
+                  value={formData.nitrogen}
+                  onChange={handleChange}
+                  required
+                />
+                {isSpeechSupported && (
+                  <button
+                    type="button"
+                    className={`form-mic-btn ${listeningField === "nitrogen" ? "active" : ""}`}
+                    onClick={() => startSpeechInput("nitrogen")}
+                    title={t.micTooltip}
+                  >
+                    {listeningField === "nitrogen" ? "🎙️" : "🎤"}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>{t.formLabelP}</label>
+              <div className="input-with-mic">
+                <input
+                  type="number"
+                  name="phosphorus"
+                  value={formData.phosphorus}
+                  onChange={handleChange}
+                  required
+                />
+                {isSpeechSupported && (
+                  <button
+                    type="button"
+                    className={`form-mic-btn ${listeningField === "phosphorus" ? "active" : ""}`}
+                    onClick={() => startSpeechInput("phosphorus")}
+                    title={t.micTooltip}
+                  >
+                    {listeningField === "phosphorus" ? "🎙️" : "🎤"}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>{t.formLabelK}</label>
+              <div className="input-with-mic">
+                <input
+                  type="number"
+                  name="potassium"
+                  value={formData.potassium}
+                  onChange={handleChange}
+                  required
+                />
+                {isSpeechSupported && (
+                  <button
+                    type="button"
+                    className={`form-mic-btn ${listeningField === "potassium" ? "active" : ""}`}
+                    onClick={() => startSpeechInput("potassium")}
+                    title={t.micTooltip}
+                  >
+                    {listeningField === "potassium" ? "🎙️" : "🎤"}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>{t.formLabelPh}</label>
+              <div className="input-with-mic">
+                <input
+                  type="number"
+                  step="0.1"
+                  min="0"
+                  max="14"
+                  name="ph"
+                  value={formData.ph}
+                  onChange={handleChange}
+                  required
+                />
+                {isSpeechSupported && (
+                  <button
+                    type="button"
+                    className={`form-mic-btn ${listeningField === "ph" ? "active" : ""}`}
+                    onClick={() => startSpeechInput("ph")}
+                    title={t.micTooltip}
+                  >
+                    {listeningField === "ph" ? "🎙️" : "🎤"}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>{t.formLabelRainfall}</label>
+              <div className="input-with-mic">
+                <input
+                  type="number"
+                  name="rainfall"
+                  value={formData.rainfall}
+                  onChange={handleChange}
+                  required
+                />
+                {isSpeechSupported && (
+                  <button
+                    type="button"
+                    className={`form-mic-btn ${listeningField === "rainfall" ? "active" : ""}`}
+                    onClick={() => startSpeechInput("rainfall")}
+                    title={t.micTooltip}
+                  >
+                    {listeningField === "rainfall" ? "🎙️" : "🎤"}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="input-group">
+              <label>{t.formLabelTemp}</label>
+              <div className="input-with-mic">
+                <input
+                  type="number"
+                  name="temperature"
+                  value={formData.temperature}
+                  onChange={handleChange}
+                  required
+                />
+                {isSpeechSupported && (
+                  <button
+                    type="button"
+                    className={`form-mic-btn ${listeningField === "temperature" ? "active" : ""}`}
+                    onClick={() => startSpeechInput("temperature")}
+                    title={t.micTooltip}
+                  >
+                    {listeningField === "temperature" ? "🎙️" : "🎤"}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="input-group" style={{ gridColumn: "span 2" }}>
+              <label>{t.formLabelHumidity}</label>
+              <div className="input-with-mic">
+                <input
+                  type="number"
+                  name="humidity"
+                  value={formData.humidity}
+                  onChange={handleChange}
+                  required
+                />
+                {isSpeechSupported && (
+                  <button
+                    type="button"
+                    className={`form-mic-btn ${listeningField === "humidity" ? "active" : ""}`}
+                    onClick={() => startSpeechInput("humidity")}
+                    title={t.micTooltip}
+                  >
+                    {listeningField === "humidity" ? "🎙️" : "🎤"}
+                  </button>
+                )}
+              </div>
+            </div>
+
+            <div className="submit-section">
+              <button type="submit" disabled={loading}>
+                {loading ? t.formBtnAnalyzing : t.formBtnAnalyze}
+              </button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   );
