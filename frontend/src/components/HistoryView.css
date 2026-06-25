@@ -1,0 +1,237 @@
+/* ═══════════════════════════════════════
+   SOIL ANALYSIS HISTORY — Premium Glassmorphism
+   Agriculture Theme — Team CodeHarvest
+   ═══════════════════════════════════════ */
+
+.history-container {
+  width: 100%;
+  animation: historySlideIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.history-header {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.history-header h1 {
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.history-header p {
+  color: var(--gray-600);
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+.history-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/* ── DUAL CHART TRENDS PANEL ── */
+.trends-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 30px;
+  box-shadow: var(--shadow-lg);
+}
+
+.trends-panel h2 {
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  border-bottom: 2px solid rgba(45, 106, 79, 0.08);
+  padding-bottom: 12px;
+  margin-bottom: 24px;
+}
+
+/* ── HISTORY LISTING CARDS ── */
+.history-list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.history-card {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  padding: 24px;
+  box-shadow: var(--shadow-md);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.history-card:hover {
+  background: var(--white);
+  border-color: rgba(82, 183, 136, 0.25);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.history-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1.5px solid rgba(0, 0, 0, 0.04);
+  padding-bottom: 10px;
+}
+
+.history-date {
+  font-size: 0.85rem;
+  color: var(--gray-600);
+  font-weight: 600;
+}
+
+.history-score-badge {
+  background: var(--green-faint);
+  color: var(--green-main);
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: 1px solid rgba(45, 106, 79, 0.1);
+}
+
+.history-card-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  font-size: 0.9rem;
+}
+
+.history-card-body div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.history-card-body span.label {
+  font-weight: 700;
+  color: var(--green-dark);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+}
+
+.history-card-body span.value {
+  color: var(--gray-800);
+  font-weight: 500;
+}
+
+.history-card-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+/* Action Triggers buttons inside history cards */
+.btn-history-view {
+  background: var(--green-mid);
+  color: var(--white);
+  border: none;
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(45, 106, 79, 0.15);
+}
+
+.btn-history-view:hover {
+  background: var(--green-main);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.25);
+}
+
+.btn-history-delete {
+  background: rgba(239, 68, 68, 0.08);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  font-family: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-history-delete:hover {
+  background: #ef4444;
+  color: white;
+  border-color: #ef4444;
+}
+
+.btn-clear-history {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1.5px solid rgba(239, 68, 68, 0.3);
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.9rem;
+  padding: 10px 20px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-clear-history:hover {
+  background: #ef4444;
+  color: white;
+  border-color: #ef4444;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.no-history-placeholder {
+  grid-column: span 2;
+  text-align: center;
+  padding: 60px 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: var(--radius-md);
+  border: 1px dashed rgba(45, 106, 79, 0.2);
+  color: var(--gray-600);
+}
+
+.no-history-placeholder h3 {
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+@keyframes historySlideIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .history-list {
+    grid-template-columns: 1fr;
+  }
+  .no-history-placeholder {
+    grid-column: span 1;
+  }
+}

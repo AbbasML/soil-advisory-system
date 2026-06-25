@@ -1,4 +1,3 @@
-import "./Dashboard.css";
 import SoilHealthCard from "./SoilHealthCard";
 import BestCropCard from "./BestCropCard";
 import DeficiencyCard from "./DeficiencyCard";
@@ -13,36 +12,76 @@ import {
   YAxis,
   Tooltip,
   ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
 } from "recharts";
 import jsPDF from "jspdf";
 import SoilHealthGauge from "./SoilHealthGauge";
-function Dashboard({ analysis, rankings, setView }) {
+import { translations } from "../services/translations";
+import "./Dashboard.css";
+
+function Dashboard({ analysis, rankings, setView, language }) {
+  const t = translations[language] || translations["English"];
   console.log("Analysis Data:", analysis);
   if (!analysis) {
     return <h2>No analysis data available.</h2>;
   }
   console.log("ANALYSIS DATA:", analysis);
+  const cropTranslationMap = {
+    "Wheat": { Hindi: "गेहूँ", Marathi: "गेहूँ", Gujarati: "ઘઉં" },
+    "Rice": { Hindi: "धान", Marathi: "तांदूळ", Gujarati: "ડાંગર" },
+    "Maize": { Hindi: "मक्का", Marathi: "मका", Gujarati: "મકાઈ" },
+    "Soybean": { Hindi: "सोयाबीन", Marathi: "सोयाबीन", Gujarati: "સોયાબીન" },
+    "Cotton": { Hindi: "कपास", Marathi: "कापूस", Gujarati: "કપાસ" },
+    "Groundnut": { Hindi: "मूंगफली", Marathi: "भुईमूग", Gujarati: "મગફળી" },
+    "Sugarcane": { Hindi: "गन्ना", Marathi: "ऊस", Gujarati: "શેરડી" },
+    "Tomato": { Hindi: "टमाटर", Marathi: "टोमॅटो", Gujarati: "ટોમેટો" },
+    "Potato": { Hindi: "आलू", Marathi: "बटाटा", Gujarati: "બટાકા" },
+    "Onion": { Hindi: "प्याज", Marathi: "कांदा", Gujarati: "ડુંગળી" },
+  };
+
+  const getTranslatedCropName = (cropName) => {
+    if (language === "English") return cropName;
+    return cropTranslationMap[cropName]?.[language] || cropName;
+  };
+
   const npkData = [
-    { name: "Nitrogen", value: analysis.N || 0 },
-    { name: "Phosphorus", value: analysis.P || 0 },
-    { name: "Potassium", value: analysis.K || 0 },
-  ];
-  const soilHealthData = [
     {
-      name: "Healthy",
-      value: analysis.soil_health_score,
+      name:
+        language === "Hindi"
+          ? "नाइट्रोजन"
+          : language === "Marathi"
+          ? "नायट्रोजन"
+          : language === "Gujarati"
+          ? "નાઇટ્રોજન"
+          : "Nitrogen",
+      value: analysis.N || 0,
     },
     {
-      name: "Needs Improvement",
-      value: 100 - analysis.soil_health_score,
+      name:
+        language === "Hindi"
+          ? "फास्फोरस"
+          : language === "Marathi"
+          ? "फॉस्फरस"
+          : language === "Gujarati"
+          ? "ફોસ્ફરસ"
+          : "Phosphorus",
+      value: analysis.P || 0,
+    },
+    {
+      name:
+        language === "Hindi"
+          ? "पोटेशियम"
+          : language === "Marathi"
+          ? "पोटॅशियम"
+          : language === "Gujarati"
+          ? "પોટેશિયમ"
+          : "Potassium",
+      value: analysis.K || 0,
     },
   ];
+
   const cropData =
     rankings?.slice(0, 5).map((crop) => ({
-      crop: crop.crop,
+      crop: getTranslatedCropName(crop.crop),
       score: crop.score,
     })) || [];
   const downloadReport = () => {
@@ -57,7 +96,7 @@ function Dashboard({ analysis, rankings, setView }) {
 
     doc.text(`Soil Status: ${analysis.soil_health_status}`, 20, 50);
 
-    doc.text(`Recommended Crop: ${analysis.crop}`, 20, 60);
+    doc.text(`Recommended Crop: ${analysis.recommended_crop}`, 20, 60);
 
     doc.text(`pH: ${analysis.ph}`, 20, 70);
 
@@ -85,45 +124,50 @@ function Dashboard({ analysis, rankings, setView }) {
 
     doc.save("soil-report.pdf");
   };
+  const statusMap = {
+    Excellent: { English: "Excellent", Hindi: "उत्कृष्ट", Marathi: "उत्कृष्ट", Gujarati: "ઉત્કૃષ્ટ" },
+    Good: { English: "Good", Hindi: "अच्छा", Marathi: "चांगले", Gujarati: "સારું" },
+    Moderate: { English: "Moderate", Hindi: "मध्यम", Marathi: "मध्यम", Gujarati: "મધ્યમ" },
+    Poor: { English: "Poor", Hindi: "खराब", Marathi: "खराब", Gujarati: "ખરાબ" },
+  };
+
+  const getTranslatedStatus = (status) => {
+    return statusMap[status]?.[language] || status;
+  };
+
   return (
     <div className="dashboard-container">
       <div className="dashboard-header">
-        <h1>🌱 AI Soil Health Dashboard</h1>
-        <p>Smart Soil Analysis • Crop Recommendation • AI Advisory</p>
+        <h1>{t.dashHeaderTitle}</h1>
+        <p>{t.dashHeaderSub}</p>
       </div>
       <div className="stats-row">
         <div className="stat-card soil-health-card">
-  <h3>🌱 Soil Health</h3>
-  <h2>{analysis.soil_health_score}/100</h2>
+          <h3>{t.dashSoilHealth}</h3>
+          <h2>{analysis.soil_health_score}/100</h2>
 
-  <span className="status-badge">
-    {analysis.soil_health_status}
-  </span>
-</div>
+          <span className="status-badge">
+            {getTranslatedStatus(analysis.soil_health_status)}
+          </span>
+        </div>
 
         <div className="stat-card best-crop-card">
-  <h3>🏆 Recommended Crop</h3>
-  <h2>{rankings?.[0]?.crop || analysis.crop}</h2>
-  <p>Based on Soil Analysis & Suitability Score</p>
-</div>
-
-<div className="stat-card ai-card">
-  <h3>🤖 ML Prediction</h3>
-  <h2>{analysis?.ml_predicted_crop}</h2>
-  <p>Predicted by Machine Learning Model</p>
-</div>
+          <h3>{t.dashRecCrop}</h3>
+          <h2>{getTranslatedCropName(rankings?.[0]?.crop || analysis.recommended_crop)}</h2>
+          <p>{t.dashBasedOn}</p>
+        </div>
     
       </div>
       <button onClick={downloadReport} className="download-btn">
-        📄 Download Soil Report
+        {t.dashDownload}
       </button>
       <div className="dashboard-grid">
         <SoilHealthCard
           score={analysis.soil_health_score}
-          status={analysis.soil_health_status}
+          status={getTranslatedStatus(analysis.soil_health_status)}
         />
         <div className="card">
-          <h2>Top Crop Recommendations</h2>
+          <h2>{t.dashTopCrops}</h2>
 
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={cropData}>
@@ -135,7 +179,7 @@ function Dashboard({ analysis, rankings, setView }) {
           </ResponsiveContainer>
         </div>
         <div className="card">
-          <h2>NPK Analysis</h2>
+          <h2>{t.dashNpkAnalysis}</h2>
 
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={npkData}>
@@ -147,21 +191,21 @@ function Dashboard({ analysis, rankings, setView }) {
           </ResponsiveContainer>
         </div>
         <SoilHealthGauge
-  score={analysis.soil_health_score}
-  status={analysis.soil_health_status}
-/>
+          score={analysis.soil_health_score}
+          status={getTranslatedStatus(analysis.soil_health_status)}
+        />
 
         <BestCropCard
-  crop={rankings?.[0]?.crop || analysis.crop}
-  score={rankings?.[0]?.score || 0}
-/>
+          crop={getTranslatedCropName(rankings?.[0]?.crop || analysis.recommended_crop)}
+          score={rankings?.[0]?.score || 0}
+        />
 
         <DeficiencyCard deficiencies={analysis.deficiencies || []} />
 
         <SoilManagementCard recommendations={analysis.improvement_plan || []} />
       </div>
 
-      <AISummaryCard summary={analysis.ai_summary} />
+      <AISummaryCard summary={analysis.ai_summary} language={language} />
 
       <div style={{ marginTop: "20px" }}>
         <NutrientChart
@@ -175,14 +219,14 @@ function Dashboard({ analysis, rankings, setView }) {
       <div style={{ marginTop: "20px" }}>
         <CropRankingTable crops={rankings || []} />
       </div>
-<button
-  onClick={() => setView("form")}
-  className="download-btn"
->
-  🔄 Analyze Another Soil Sample
-</button>
+      <button
+        onClick={() => setView("form")}
+        className="download-btn"
+      >
+        {t.dashAnalyzeAnother}
+      </button>
       <button onClick={() => setView("chat")} className="chat-btn">
-        🤖 Ask KisanBot
+        {t.dashAskKisan}
       </button>
     </div>
   );

@@ -1,46 +1,99 @@
+/* ═══════════════════════════════════════
+   LOADING SCREEN — Premium Glassmorphism Overhaul
+   Agriculture Theme — Team CodeHarvest
+   ═══════════════════════════════════════ */
+
 .loading-screen {
-  min-height: 100vh;
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 50% 50%, rgba(216, 243, 220, 0.6) 0%, rgba(255, 255, 255, 1) 100%);
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 9999;
+  animation: screenFadeIn 0.3s ease forwards;
 }
 
 .loading-card {
-  background: white;
-  padding: 40px;
-  border-radius: 24px;
   text-align: center;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-  min-width: 400px;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  padding: 50px;
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  box-shadow: var(--shadow-lg);
+  max-width: 480px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  animation: cardBounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 .loading-card h1 {
-  color: #166534;
-  margin-bottom: 25px;
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin: 0;
+  letter-spacing: -0.5px;
 }
 
-.loading-steps {
-  text-align: left;
-  line-height: 2;
-  color: #4b5563;
+.loading-card h2 {
+  font-size: 1.05rem;
+  color: var(--gray-600);
+  font-weight: 600;
+  margin: 10px 0 0;
+  min-height: 24px;
 }
 
+/* ── DOUBLE SPINNER ANIMATION ── */
 .spinner {
   width: 60px;
   height: 60px;
-
-  margin: 25px auto 0;
-
-  border: 6px solid #dcfce7;
-  border-top: 6px solid #16a34a;
-
-  border-radius: 50%;
-
-  animation: spin 1s linear infinite;
+  position: relative;
+  margin: 20px auto 10px;
 }
 
+.spinner::before,
+.spinner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 4px solid transparent;
+}
+
+.spinner::before {
+  border-top-color: var(--green-mid);
+  border-bottom-color: var(--green-mid);
+  animation: spin 1s infinite cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+.spinner::after {
+  border-left-color: var(--gold-accent);
+  border-right-color: var(--gold-accent);
+  animation: spinReverse 1s infinite cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transform: scale(0.75);
+}
+
+/* Animations */
 @keyframes spin {
-  100% {
-    transform: rotate(360deg);
-  }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spinReverse {
+  to { transform: rotate(-360deg) scale(0.75); }
+}
+
+@keyframes screenFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes cardBounceIn {
+  from { opacity: 0; transform: scale(0.9) translateY(20px); }
+  to { opacity: 1; transform: scale(1) translateY(0); }
 }

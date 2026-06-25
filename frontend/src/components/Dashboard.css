@@ -1,373 +1,237 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
-
-/* =========================
-   DASHBOARD CONTAINER
-========================= */
+/* ═══════════════════════════════════════
+   DASHBOARD PAGE — Premium Glassmorphism Overhaul
+   Agriculture Theme — Team CodeHarvest
+   ═══════════════════════════════════════ */
 
 .dashboard-container {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 20px;
+  width: 100%;
+  animation: dashboardFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 30px;
 }
-
-/* =========================
-   HEADER
-========================= */
 
 .dashboard-header {
   text-align: center;
-
-  background:
-    linear-gradient(
-      rgba(20, 83, 45, 0.88),
-      rgba(21, 128, 61, 0.88)
-    ),
-    url("https://images.unsplash.com/photo-1500937386664-56d1dfef3854");
-
-  background-size: cover;
-  background-position: center;
-
-  color: white;
-
-  padding: 70px 30px;
-
-  border-radius: 24px;
-
-  box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+  margin-bottom: 10px;
 }
 
 .dashboard-header h1 {
-  margin: 0;
-  font-size: 42px;
-  font-weight: 800;
+  font-family: var(--font-heading);
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 
 .dashboard-header p {
-  margin-top: 12px;
-  font-size: 16px;
-  opacity: 0.9;
+  color: var(--gray-600);
+  font-size: 1rem;
+  font-weight: 500;
 }
 
-/* =========================
-   STATS ROW
-========================= */
-
+/* ── STATS CARDS ROW ── */
 .stats-row {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
 }
 
 .stat-card {
-  border-radius: 24px;
-
-  padding: 30px 24px;
-
-  text-align: center;
-
-  color: white;
-
-  min-height: 170px;
-
+  padding: 30px;
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: var(--shadow-md);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
   display: flex;
   flex-direction: column;
   justify-content: center;
-
-  box-shadow: 0 15px 30px rgba(0,0,0,0.12);
-
-  transition: all 0.3s ease;
-}
-
-.stat-card:hover {
-  transform: translateY(-8px);
+  align-items: flex-start;
+  gap: 10px;
 }
 
 .stat-card h3 {
-  margin: 0 0 10px;
-  font-size: 16px;
-  opacity: 0.9;
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .stat-card h2 {
-  margin: 0;
-  font-size: 28px;
-  font-weight: 800;
+  font-family: var(--font-heading);
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin: 4px 0;
 }
 
 .stat-card p {
-  margin-top: 10px;
-  font-size: 13px;
-  opacity: 0.9;
+  font-size: 0.88rem;
+  font-weight: 500;
 }
 
-/* =========================
-   SPECIAL CARDS
-========================= */
-
-.soil-health-card {
-  background: linear-gradient(
-    135deg,
-    #0f766e,
-    #14b8a6
-  );
+/* Specific Stat Card Color Schemes */
+.stat-card.soil-health-card {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-left: 6px solid var(--green-light);
 }
 
-.best-crop-card {
-  background: linear-gradient(
-    135deg,
-    #ca8a04,
-    #facc15
-  );
-
-  color: #14532d;
+.stat-card.soil-health-card h3 {
+  color: var(--green-light);
 }
 
-.ai-card {
-  background: linear-gradient(
-    135deg,
-    #7c3aed,
-    #a855f7
-  );
+.stat-card.soil-health-card h2 {
+  color: var(--green-dark);
 }
 
-.status-badge {
-  display: inline-block;
-
-  margin-top: 14px;
-
-  padding: 7px 16px;
-
-  border-radius: 999px;
-
-  background: rgba(255,255,255,0.2);
-
-  font-size: 12px;
-
-  font-weight: 700;
-}
-.best-crop-card-main {
-  background: linear-gradient(
-    135deg,
-    #ffffff,
-    #f0fdf4
-  );
-
-  border-radius: 24px;
-
-  padding: 30px;
-
-  text-align: center;
-
-  border: 2px solid #dcfce7;
-
-  box-shadow: 0 15px 35px rgba(0,0,0,0.08);
-
-  transition: all 0.3s ease;
+.stat-card.best-crop-card {
+  background: linear-gradient(135deg, var(--green-main), var(--green-dark));
+  color: var(--white);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-.best-crop-card-main:hover {
-  transform: translateY(-6px);
+.stat-card.best-crop-card h3 {
+  color: var(--gold-accent);
 }
 
-.best-crop-header {
-  font-size: 16px;
-  font-weight: 700;
-  color: #14532d;
+.stat-card.best-crop-card h2 {
+  color: var(--white);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
-.best-crop-icon {
-  font-size: 64px;
-  margin: 20px 0;
+.stat-card.best-crop-card p {
+  color: var(--green-pale);
 }
 
-.best-crop-name {
-  margin: 0;
-
-  color: #166534;
-
-  font-size: 36px;
-
-  font-weight: 800;
-
-  text-transform: capitalize;
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
 }
 
-.best-crop-score {
-  display: inline-block;
-
-  margin-top: 16px;
-
-  padding: 10px 20px;
-
-  border-radius: 999px;
-
-  background: linear-gradient(
-    135deg,
-    #16a34a,
-    #22c55e
-  );
-
-  color: white;
-
-  font-weight: 700;
-
-  font-size: 15px;
-}
-
-.best-crop-text {
-  margin-top: 20px;
-
-  color: #6b7280;
-
-  line-height: 1.6;
-}
-
-/* =========================
-   BUTTONS
-========================= */
-
+/* ── DOWNLOAD PDF ACTION ── */
 .download-btn {
-  width: fit-content;
-  align-self: center;
-
-  background: white;
-  border: 2px solid #16a34a;
-  color: #166534;
-
-  border-radius: 16px;
-  padding: 14px 24px;
-
-  font-size: 15px;
+  background: linear-gradient(135deg, var(--green-mid), var(--green-main));
+  color: var(--white);
+  border: none;
+  font-family: inherit;
   font-weight: 700;
-
+  font-size: 1rem;
+  padding: 16px 32px;
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(45, 106, 79, 0.2);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 auto;
+  max-width: 360px;
 }
-
 
 .download-btn:hover {
-  background: #dcfce7;
+  background: linear-gradient(135deg, var(--green-light), var(--green-mid));
   transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(45, 106, 79, 0.35), var(--shadow-glow);
 }
 
-.chat-btn {
-  width: 100%;
-
-  padding: 18px;
-
-  border: none;
-
-  border-radius: 18px;
-
-  background: linear-gradient(
-    135deg,
-    #f59e0b,
-    #facc15
-  );
-
-  color: #14532d;
-
-  font-size: 17px;
-
-  font-weight: 700;
-
-  cursor: pointer;
-
-  box-shadow: 0 10px 25px rgba(245,158,11,0.3);
-
-  transition: all 0.3s ease;
-}
-
-.chat-btn:hover {
-  transform: translateY(-4px);
-}
-
-/* =========================
-   DASHBOARD GRID
-========================= */
-
+/* ── DASHBOARD GRID & CARDS ── */
 .dashboard-grid {
   display: grid;
-
-  grid-template-columns:
-    repeat(auto-fit, minmax(350px, 1fr));
-
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
 }
 
-.card {
-  background: rgba(255,255,255,0.95);
-
-  backdrop-filter: blur(12px);
-
-  border-radius: 24px;
-
-  padding: 26px;
-
-  border: 1px solid rgba(255,255,255,0.4);
-
-  box-shadow:
-    0 15px 35px rgba(0,0,0,0.08);
-
+.dashboard-grid .card {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  padding: 30px;
+  box-shadow: var(--shadow-md);
   transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.card:hover {
-  transform: translateY(-6px);
-
-  box-shadow:
-    0 20px 40px rgba(0,0,0,0.12);
+.dashboard-grid .card:hover {
+  background: rgba(255, 255, 255, 0.85);
+  border-color: rgba(82, 183, 136, 0.2);
+  box-shadow: var(--shadow-lg);
 }
 
-.card h2 {
-  margin: 0 0 16px;
-
-  color: #14532d;
-
-  font-size: 18px;
-
+.dashboard-grid .card h2 {
+  font-family: var(--font-heading);
+  font-size: 1.25rem;
   font-weight: 700;
+  color: var(--green-dark);
+  letter-spacing: -0.2px;
+  border-bottom: 2px solid rgba(45, 106, 79, 0.08);
+  padding-bottom: 12px;
+  margin-bottom: 4px;
 }
 
-.card p {
-  color: #4b5563;
+/* ── ACTION BUTTON GROUP ── */
+.chat-btn {
+  background: linear-gradient(135deg, var(--gold-accent), var(--gold-dark));
+  color: var(--green-dark);
+  border: none;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 16px 32px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(217, 119, 6, 0.2);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0 auto;
+  max-width: 360px;
 }
 
-/* =========================
-   RECHARTS
-========================= */
-
-.recharts-wrapper {
-  font-size: 13px;
+.chat-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(217, 119, 6, 0.35), 0 0 20px rgba(252, 211, 77, 0.25);
 }
 
-.card canvas,
-.card svg {
-  border-radius: 12px;
+/* Sub-card structures visual resets */
+.status-badge {
+  background: var(--green-faint);
+  color: var(--green-main);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: 1px solid rgba(45, 106, 79, 0.15);
 }
 
-/* =========================
-   MOBILE
-========================= */
+/* Animations */
+@keyframes dashboardFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 
+/* Responsive configurations */
 @media (max-width: 768px) {
-
   .stats-row {
     grid-template-columns: 1fr;
+    gap: 16px;
   }
-
   .dashboard-grid {
     grid-template-columns: 1fr;
+    gap: 20px;
   }
-
-  .dashboard-header {
-    padding: 50px 20px;
-  }
-
   .dashboard-header h1 {
-    font-size: 30px;
+    font-size: 1.8rem;
   }
 }

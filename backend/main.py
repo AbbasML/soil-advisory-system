@@ -3,6 +3,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from dotenv import load_dotenv
 from google import genai
+from google.genai import types
 import os
 
 # --------------------------------------------------
@@ -20,7 +21,8 @@ from rule_engine import (
     get_fertilizer_recommendations,
     get_improvement_plan,
     calculate_suitability_all_crops,
-    calculate_soil_health_score
+    calculate_soil_health_score,
+    get_suitability_reasons
 )
 
 # --------------------------------------------------
@@ -56,11 +58,14 @@ def predict_crop_ml(N, P, K, temperature, humidity, ph, rainfall):
 # --------------------------------------------------
 # Safe Gemini Function (IMPORTANT FIX)
 # --------------------------------------------------
-def get_ai_summary(prompt):
+def get_ai_summary(prompt, language="English"):
     try:
         response = client.models.generate_content(
-            model="gemini-1.5-flash-latest",
-            contents=prompt
+            model="gemini-1.5-flash",
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                system_instruction=f"You are an expert agricultural advisor for Indian farmers. You MUST respond ONLY in the following language: {language}. Keep your response simple and under 5 lines."
+            )
         )
         return response.text
 
@@ -88,6 +93,19 @@ def test():
     }
 
 
+@app.get("/crops")
+def get_crops():
+    crop_list = []
+    for key, val in CROPS.items():
+        if key not in ["deficiency_rules", "fertilizer_recommendations", "soil_correction", "improvement_plan"] and isinstance(val, dict) and "name" in val:
+            crop_list.append({
+                "id": key,
+                "name": val["name"],
+                "hindi_name": val.get("hindi_name", val["name"])
+            })
+    return crop_list
+
+
 # --------------------------------------------------
 # MAIN ANALYSIS ENDPOINT
 # --------------------------------------------------
@@ -95,14 +113,6 @@ def test():
 async def analyze_soil(data: dict):
 
     try:
-        crop = data["crop"].lower()
-
-        if crop not in CROPS:
-            return {
-                "success": False,
-                "message": f"Crop '{crop}' not found"
-            }
-
         # Safe conversions
         ph = float(data["ph"])
         N = float(data["nitrogen"])
@@ -117,53 +127,61 @@ async def analyze_soil(data: dict):
         # --------------------------------------------------
         # ML Prediction
         # --------------------------------------------------
-        ml_crop = predict_crop_ml(
+        predicted_crop = predict_crop_ml(
             N, P, K,
             temperature, humidity, ph, rainfall
         )
+        crop_key = predicted_crop.lower()
 
         # --------------------------------------------------
         # Rule Engine
         # --------------------------------------------------
-        deficiencies = detect_deficiencies(crop, ph, N, P, K)
+        deficiencies = detect_deficiencies(crop_key, ph, N, P, K)
+        fertilizers = get_fertilizer_recommendations(crop_key, ph, N, P, K)
+        improvement_plan = get_improvement_plan(crop_key, ph, N, P, K)
+        soil_health = calculate_soil_health_score(crop_key, ph, N, P, K)
 
-        fertilizers = get_fertilizer_recommendations(crop, ph, N, P, K)
+        # Calculate alternative crop
+        rankings = calculate_suitability_all_crops(ph, N, P, K)
+        alternative_crop_display = "Wheat"
+        for r in rankings:
+            if r["crop"].lower() != crop_key:
+                alternative_crop_display = r["crop"]
+                break
 
-        improvement_plan = get_improvement_plan(crop, ph, N, P, K)
-
-        soil_health = calculate_soil_health_score(crop, ph, N, P, K)
+        # Calculate suitability reasons for recommended crop
+        suitability_reasons = get_suitability_reasons(
+            crop_key, ph, N, P, K,
+            temperature, humidity, rainfall
+        )
 
         # --------------------------------------------------
         # AI Prompt
         # --------------------------------------------------
         prompt = f"""
-You are an expert agricultural advisor for Indian farmers.
+Recommended Crop: {predicted_crop.capitalize()}
+Alternative Crop: {alternative_crop_display}
 
-IMPORTANT:
-- Respond ONLY in {language}.
-- Keep it simple and practical.
-
-Crop: {CROPS[crop]['name']}
-
-Soil:
+Soil Metrics:
 - pH: {ph}
-- N: {N}
-- P: {P}
-- K: {K}
+- Nitrogen (N): {N} kg/ha
+- Phosphorus (P): {P} kg/ha
+- Potassium (K): {K} kg/ha
+- Temperature: {temperature} °C
+- Humidity: {humidity} %
+- Rainfall: {rainfall} mm
 
-Deficiencies:
+Detected Deficiencies:
 {deficiencies}
 
-Fertilizers:
+Recommended Fertilizers:
 {fertilizers}
 
-Plan:
+Improvement Plan:
 {improvement_plan}
-
-Give short farmer advice in 4-5 lines.
 """
 
-        ai_summary = get_ai_summary(prompt)
+        ai_summary = get_ai_summary(prompt, language)
 
         # --------------------------------------------------
         # FINAL RESPONSE (NEVER EMPTY)
@@ -174,8 +192,8 @@ Give short farmer advice in 4-5 lines.
             "soil_health_score": soil_health["score"],
             "soil_health_status": soil_health["status"],
 
-            "crop": CROPS[crop]["name"],
-            "ml_predicted_crop": ml_crop,
+            "recommended_crop": predicted_crop.capitalize(),
+            "alternative_crop": alternative_crop_display,
 
             "ph": ph,
             "N": N,
@@ -187,6 +205,7 @@ Give short farmer advice in 4-5 lines.
             "improvement_plan": improvement_plan,
 
             "ai_summary": ai_summary,
+            "suitability_reasons": suitability_reasons,
 
             "overall_status": "Good" if len(deficiencies) == 0 else "Needs Attention"
         }
@@ -236,22 +255,28 @@ async def chat(data: dict):
         language = data.get("language", "English")
         soil_context = data.get("soil_context", "")
 
-        prompt = f"""
-You are KisanBot.
+        sys_instruction = f"""You are KisanBot, an expert agricultural chatbot assistant for Indian farmers.
+IMPORTANT:
+- You MUST respond ONLY in the following language: {language}.
+- Translate all agricultural advice, recommendations, and greeting answers to {language}.
+- Keep your response under 150 words.
+- Keep it extremely simple, practical, and friendly.
+"""
 
-Soil Context:
+        user_content = f"""Soil Context (use this to help answer if relevant):
 {soil_context}
 
-Question:
+User Query:
 {user_message}
-
-Reply in simple farmer language under 150 words.
 """
 
         response = client.models.generate_content(
-    model="gemini-2.5-flash",
-    contents=prompt
-)
+            model="gemini-2.5-flash",
+            contents=user_content,
+            config=types.GenerateContentConfig(
+                system_instruction=sys_instruction
+            )
+        )
 
         return {
             "reply": response.text,

@@ -1,139 +1,210 @@
 /* ═══════════════════════════════════════
-   APP.CSS — Global + Form + Dashboard + Chatbot
+   APP.CSS — Modern Glassmorphism & Nature Theme
    Agriculture Theme — Team CodeHarvest
-═══════════════════════════════════════ */
+   ═══════════════════════════════════════ */
 
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap");
 
 :root {
-  --green-dark: #14532d;
-  --green-main: #166534;
-  --green-mid: #15803d;
-  --green-light: #22c55e;
-  --green-pale: #dcfce7;
-  --green-faint: #f0fdf4;
-  --golden: #ca8a04;
-  --golden-pale: #fef9c3;
+  /* Curated Premium Green & Gold Palette */
+  --green-dark: #081c15;
+  --green-main: #1b4332;
+  --green-mid: #2d6a4f;
+  --green-light: #40916c;
+  --green-accent: #52b788;
+  --green-mint: #74c69d;
+  --green-pale: #b7e4c7;
+  --green-faint: #d8f3dc;
+  
+  --gold-accent: #fcd34d;
+  --gold-dark: #d97706;
+  
+  /* Glassmorphism System Specs */
+  --glass-bg: rgba(255, 255, 255, 0.7);
+  --glass-bg-hover: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.5);
+  --glass-border-focus: rgba(45, 106, 79, 0.4);
+  
+  /* Typography */
+  --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Space Grotesk', system-ui, -apple-system, sans-serif;
+  
+  /* Radius & Shadows */
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 28px;
+  --shadow-sm: 0 4px 12px rgba(27, 67, 50, 0.03);
+  --shadow-md: 0 10px 30px rgba(27, 67, 50, 0.06);
+  --shadow-lg: 0 20px 48px rgba(27, 67, 50, 0.12);
+  --shadow-glow: 0 0 25px rgba(82, 183, 136, 0.25);
+  
+  /* Color Scheme Neutrals */
   --white: #ffffff;
-  --gray-50: #f9fafb;
-  --gray-100: #f3f4f6;
-  --gray-200: #e5e7eb;
-  --gray-400: #9ca3af;
-  --gray-600: #4b5563;
-  --gray-800: #1f2937;
-  --red-50: #fef2f2;
-  --red-500: #ef4444;
-  --red-800: #991b1b;
-  --amber-50: #fffbeb;
-  --amber-500: #f59e0b;
-  --amber-800: #92400e;
-  --radius-sm: 10px;
-  --radius-md: 16px;
-  --radius-lg: 24px;
-  --shadow-sm: 0 2px 10px rgba(20, 83, 45, 0.06);
-  --shadow-md: 0 6px 24px rgba(20, 83, 45, 0.1);
-  --shadow-lg: 0 10px 36px rgba(20, 83, 45, 0.16);
+  --gray-50: #f4f7f5;
+  --gray-100: #eef2ef;
+  --gray-200: #dce4dd;
+  --gray-400: #94a3b8;
+  --gray-600: #475569;
+  --gray-800: #0f172a;
 }
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 body {
-  margin: 0;
-  font-family: "Poppins", "Segoe UI", system-ui, sans-serif;
-  background: linear-gradient(165deg, #f0fdf4 0%, #ecfdf5 50%, #f7fee7 100%);
+  font-family: var(--font-sans);
+  background: radial-gradient(circle at 10% 20%, rgba(216, 243, 220, 0.4) 0%, rgba(255, 255, 255, 1) 90.1%);
   min-height: 100vh;
   color: var(--gray-800);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .app-container {
-  max-width: 1400px;
+  max-width: 1300px;
   margin: 0 auto;
-  padding: 0 20px 60px;
+  padding: 0 24px 60px;
 }
 
 /* ══════════════════════════════════
-   TOP HEADER
-══════════════════════════════════ */
-.app-topbar {
+   TOP NAVIGATION HEADER
+   ══════════════════════════════════ */
+.global-header {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 20px 4px;
-  margin-bottom: 8px;
+  align-items: center;
+  padding: 16px 32px;
+  background: rgba(255, 255, 255, 0.65);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  margin-top: 24px;
+  margin-bottom: 30px;
+  box-shadow: var(--shadow-md);
+  z-index: 10;
+  transition: all 0.3s ease;
 }
 
+.global-header:hover {
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(82, 183, 136, 0.2);
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.logo-emoji {
+  font-size: 1.8rem;
+  animation: logoPulse 2.5s infinite ease-in-out;
+}
+
+.logo-text {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  letter-spacing: -0.5px;
+  background: linear-gradient(135deg, var(--green-dark), var(--green-mid));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.lang-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--green-mid);
+}
+
+.global-lang-select {
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  border: 1.5px solid rgba(45, 106, 79, 0.25);
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--green-dark);
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  font-size: 0.88rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  font-family: inherit;
+}
+
+.global-lang-select:hover {
+  border-color: var(--green-mid);
+  background: var(--white);
+  transform: translateY(-1px);
+}
+
+.global-lang-select:focus {
+  border-color: var(--green-light);
+  box-shadow: 0 0 0 3px rgba(82, 183, 136, 0.25);
+}
+
+/* ── BACK ACTION BUTTONS ── */
 .btn-back {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
+  gap: 8px;
+  padding: 10px 22px;
   background: var(--white);
-  border: 1.5px solid var(--green-mid);
+  border: 1.5px solid rgba(45, 106, 79, 0.25);
   border-radius: var(--radius-sm);
-  color: var(--green-main);
-  font-size: 13px;
+  color: var(--green-dark);
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   font-family: inherit;
-  transition: background 0.15s;
-  margin-top: 16px;
-  margin-bottom: 8px;
+  transition: all 0.25s ease;
+  box-shadow: var(--shadow-sm);
+  margin-top: 10px;
 }
 
 .btn-back:hover {
-  background: var(--green-pale);
-}
-
-
-/* ══════════════════════════════════
-   CHATBOT (in case Chatbot.jsx uses these classes)
-══════════════════════════════════ */
-.chatbot-container {
-  background: var(--white);
-  border-radius: var(--radius-lg);
+  background: var(--green-faint);
+  border-color: var(--green-mid);
+  color: var(--green-main);
+  transform: translateX(-3px);
   box-shadow: var(--shadow-md);
-  overflow: hidden;
-  border: 1px solid var(--green-pale);
-  max-width: 700px;
-  margin: 20px auto;
 }
 
-/* ══════════════════════════════════
-   RESPONSIVE — MOBILE
-══════════════════════════════════ */
-@media (max-width: 768px) {
-
-  .stats-row {
-    grid-template-columns: 1fr;
-  }
-
-  .dashboard-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .dashboard-header h1 {
-    font-size: 30px;
-  }
-
-  .dashboard-header {
-    padding: 50px 20px;
-  }
-}
-
+/* Scrollbar Customization */
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #bbf7d0;
-  border-radius: 3px;
+  background: var(--green-pale);
+  border-radius: 10px;
 }
-.recharts-wrapper {
-  font-size: 13px;
+::-webkit-scrollbar-thumb:hover {
+  background: var(--green-mint);
 }
 
-.card canvas,
-.card svg {
-  border-radius: 10px;
+/* Recharts override */
+.recharts-wrapper {
+  font-family: var(--font-sans) !important;
+  font-size: 12px;
+}
+
+/* Animations */
+@keyframes logoPulse {
+  0% { transform: scale(1) rotate(0deg); }
+  50% { transform: scale(1.1) rotate(5deg); }
+  100% { transform: scale(1) rotate(0deg); }
 }

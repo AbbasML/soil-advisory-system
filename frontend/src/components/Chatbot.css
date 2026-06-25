@@ -1,0 +1,240 @@
+.chatbot-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(45, 106, 79, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chatbot-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 15px;
+  border-bottom: 2px solid rgba(45, 106, 79, 0.1);
+  padding-bottom: 15px;
+}
+
+.back-btn {
+  background: transparent;
+  border: 1px solid #2d6a4f;
+  color: #2d6a4f;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-btn:hover {
+  background: #2d6a4f;
+  color: white;
+}
+
+.language-selector-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.language-select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 2px solid #2d6a4f;
+  background: white;
+  color: #2d6a4f;
+  font-weight: 600;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.language-select:focus {
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.2);
+}
+
+.quick-questions-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.quick-q-btn {
+  background: #eaf5f0;
+  border: 1px solid rgba(45, 106, 79, 0.2);
+  color: #2d6a4f;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.quick-q-btn:hover {
+  background: #2d6a4f;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(45, 106, 79, 0.15);
+}
+
+.chat-history {
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  background: #f8faf9;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  scroll-behavior: smooth;
+}
+
+/* Chat bubble styling with message entry animation */
+.chat-message-row {
+  display: flex;
+  width: 100%;
+  animation: messageSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.chat-message-row.user {
+  justify-content: flex-end;
+}
+
+.chat-message-row.bot {
+  justify-content: flex-start;
+}
+
+.message-bubble {
+  max-width: 75%;
+  padding: 12px 18px;
+  border-radius: 16px;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.chat-message-row.user .message-bubble {
+  background: linear-gradient(135deg, #2d6a4f, #1b4332);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-message-row.bot .message-bubble {
+  background: white;
+  color: #333;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  border-bottom-left-radius: 4px;
+}
+
+.chat-input-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.message-text-input {
+  flex: 1;
+  padding: 14px 20px;
+  border-radius: 12px;
+  border: 2px solid rgba(0, 0, 0, 0.08);
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.message-text-input:focus {
+  border-color: #2d6a4f;
+  box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.15);
+}
+
+.chat-control-btn {
+  padding: 14px 24px;
+  border-radius: 12px;
+  border: none;
+  background: #2d6a4f;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(45, 106, 79, 0.2);
+}
+
+.chat-control-btn:hover {
+  background: #1b4332;
+  transform: translateY(-1px);
+}
+
+.mic-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid rgba(45, 106, 79, 0.2);
+  background: white;
+  color: #2d6a4f;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.3rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.mic-btn:hover {
+  background: #eaf5f0;
+  border-color: #2d6a4f;
+  color: #2d6a4f;
+  transform: scale(1.05);
+}
+
+/* Pulsing microphone animation when active */
+.mic-btn.active {
+  background: #d90429;
+  border-color: #d90429;
+  color: white;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(217, 4, 41, 0.6);
+  }
+  70% {
+    transform: scale(1.08);
+    box-shadow: 0 0 0 10px rgba(217, 4, 41, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(217, 4, 41, 0);
+  }
+}
+
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

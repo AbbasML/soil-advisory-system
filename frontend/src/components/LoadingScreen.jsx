@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import "./LoadingScreen.css";
 
-function LoadingScreen() {
-  const messages = [
-    "🔍 Analyzing Soil Data...",
-    "🤖 Running ML Model...",
-    "📊 Calculating Soil Health...",
-    "🌾 Ranking Crops...",
-    "✅ Generating Recommendations..."
-  ];
+const messages = [
+  "🔍 Analyzing Soil Data...",
+  "🤖 Running ML Model...",
+  "📊 Calculating Soil Health...",
+  "🌾 Ranking Crops...",
+  "✅ Generating Recommendations..."
+];
 
+function LoadingScreen() {
   const [step, setStep] = useState(0);
 
   useEffect(() => {

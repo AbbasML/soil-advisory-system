@@ -1,6 +1,9 @@
+import { translations } from "../services/translations";
 import "./LandingPage.css";
 
-function LandingPage({ onStart }) {
+function LandingPage({ onStart, language }) {
+  const t = translations[language] || translations["English"];
+
   return (
     <div className="landing">
       {/* HERO SECTION */}
@@ -10,15 +13,12 @@ function LandingPage({ onStart }) {
         <div className="hero-content">
           <div className="hero-icon">🌱</div>
 
-          <h1 className="hero-title">
-            AI Soil Health
-            <br />
-            & Crop Advisory System
+          <h1 className="hero-title" style={{ whiteSpace: "pre-line" }}>
+            {t.heroTitle}
           </h1>
 
           <p className="hero-subtitle">
-            Empowering farmers with Machine Learning, Soil Intelligence,
-            Crop Prediction, and AI-driven recommendations for smarter farming.
+            {t.heroSubtitle}
           </p>
 
           <button
@@ -27,14 +27,14 @@ function LandingPage({ onStart }) {
               onStart();
             }}
           >
-            🚀 Start Soil Analysis
+            {t.startAnalysis}
           </button>
 
           <div className="hero-badges">
-            <span>🤖 Machine Learning</span>
-            <span>📊 Soil Analytics</span>
-            <span>🌾 Crop Prediction</span>
-            <span>🌍 Multilingual</span>
+            <span>{t.mlBadge}</span>
+            <span>{t.analyticsBadge}</span>
+            <span>{t.cropBadge}</span>
+            <span>{t.multilingualBadge}</span>
           </div>
         </div>
       </div>
@@ -42,59 +42,59 @@ function LandingPage({ onStart }) {
       {/* FEATURES SECTION */}
       <section className="features">
         <h2 className="features-title">
-          Smart Farming Powered by AI
+          {t.featuresTitle}
         </h2>
 
         <p className="features-subtitle">
-          Everything needed to analyze soil health and maximize crop productivity.
+          {t.featuresSubtitle}
         </p>
 
         <div className="feature-grid">
           <div className="feature-card">
             <div className="feature-icon">🌾</div>
-            <h3>Crop Recommendation</h3>
+            <h3>{t.cropRecTitle}</h3>
             <p>
-              Machine Learning predicts the most suitable crop for your soil.
+              {t.cropRecDesc}
             </p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">📊</div>
-            <h3>Soil Health Analysis</h3>
+            <h3>{t.soilHealthTitle}</h3>
             <p>
-              Evaluate soil quality using NPK levels, pH, moisture and climate.
+              {t.soilHealthDesc}
             </p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">🤖</div>
-            <h3>AI Advisory</h3>
+            <h3>{t.aiAdvisoryTitle}</h3>
             <p>
-              Receive intelligent recommendations powered by AI.
+              {t.aiAdvisoryDesc}
             </p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">🧪</div>
-            <h3>Fertilizer Guidance</h3>
+            <h3>{t.fertGuidanceTitle}</h3>
             <p>
-              Detect nutrient deficiencies and get fertilizer suggestions.
+              {t.fertGuidanceDesc}
             </p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">📈</div>
-            <h3>Soil Improvement Plan</h3>
+            <h3>{t.soilImproveTitle}</h3>
             <p>
-              Improve long-term soil health with actionable recommendations.
+              {t.soilImproveDesc}
             </p>
           </div>
 
           <div className="feature-card">
             <div className="feature-icon">🌍</div>
-            <h3>Multilingual Support</h3>
+            <h3>{t.multiSupportTitle}</h3>
             <p>
-              Accessible guidance for farmers in multiple languages.
+              {t.multiSupportDesc}
             </p>
           </div>
         </div>
@@ -103,18 +103,18 @@ function LandingPage({ onStart }) {
       {/* STATS SECTION */}
       <section className="stats-section">
         <div className="stat-card">
-          <h2>⚡ AI Powered</h2>
-          <p>Real-time soil insights and recommendations</p>
+          <h2>{t.statAi}</h2>
+          <p>{t.statAiDesc}</p>
         </div>
 
         <div className="stat-card">
-          <h2>🎯 ML Based</h2>
-          <p>Crop prediction using trained machine learning models</p>
+          <h2>{t.statMl}</h2>
+          <p>{t.statMlDesc}</p>
         </div>
 
         <div className="stat-card">
-          <h2>🌱 Sustainable Farming</h2>
-          <p>Promoting efficient resource utilization and soil health</p>
+          <h2>{t.statSust}</h2>
+          <p>{t.statSustDesc}</p>
         </div>
       </section>
     </div>

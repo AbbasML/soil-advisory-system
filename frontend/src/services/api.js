@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:8000",
+  baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000",
 });
 
 export const analyzeSoil = (data) =>
@@ -12,5 +12,8 @@ export const compareCrops = (data) =>
 
 export const chatWithBot = (data) =>
   API.post("/chat", data);
+
+export const getCropsList = () =>
+  API.get("/crops");
 
 export default API;
