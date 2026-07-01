@@ -1,18 +1,14 @@
-from google import genai
 from dotenv import load_dotenv
 import os
+import sys
 
-load_dotenv()
+# Add backend directory to path
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
-print("KEY:", os.getenv("GEMINI_API_KEY")[:10])
+from main import get_ai_summary
 
-client = genai.Client(
-    api_key=os.getenv("GEMINI_API_KEY")
-)
-
-response = client.models.generate_content(
-    model="gemini-2.5-flash",
-    contents="Hello"
-)
-
-print(response.text)
+print("Running get_ai_summary test...")
+prompt = "Recommended Crop: Rice. Soil is nitrogen deficient."
+result = get_ai_summary(prompt, language="English")
+print("Result:")
+print(result)
